@@ -1,0 +1,21 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "model": "deepseek/deepseek-v4-pro",
+  "agent": {
+    "build": { "model": "deepseek/deepseek-v4-pro", "temperature": 0.2, "top_p": 0.5 },
+    "plan": { "model": "deepseek/deepseek-v4-pro", "temperature": 0.2 }
+  },
+  "mcp": {
+    "hku-browser": {
+      "type": "local",
+      "command": [
+        "C:\\Program Files\\nodejs\\node.exe",
+        "D:\\DeskTop\\Programming\\OpenCode\\literature_reviewer\\node_modules\\@playwright\\mcp\\cli.js",
+        "--browser", "chrome",
+        "--user-data-dir", "D:\\DeskTop\\Programming\\OpenCode\\literature_reviewer\\.hku-profile",
+        "--ignore-https-errors"
+      ],
+      "enabled": true
+    }
+  }
+}

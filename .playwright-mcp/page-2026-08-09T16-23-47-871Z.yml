@@ -1,0 +1,89 @@
+- generic [ref=f18e1]:
+  - banner [ref=f18e2]:
+    - link "跳到主要内容" [ref=f18e3] [cursor=pointer]
+    - generic [ref=f18e4]:
+      - generic [ref=f18e5]:
+        - link "Chrome 应用商店的徽标 Chrome 应用商店" [ref=f18e7] [cursor=pointer]:
+          - /url: ./
+          - img "Chrome 应用商店的徽标" [ref=f18e8]
+          - generic [ref=f18e9]: Chrome 应用商店
+        - search "网站级" [ref=f18e10]:
+          - generic [ref=f18e13]:
+            - combobox "搜索 Chrome 应用商店" [active] [ref=f18e15]: HKUL Search Assist
+            - button "清除搜索条件" [ref=f18e17] [cursor=pointer]
+        - generic [ref=f18e20]:
+          - button "一个包含更多选项的菜单" [ref=f18e24] [cursor=pointer]
+          - generic [ref=f18e34]:
+            - button "Google 应用" [ref=f18e38] [cursor=pointer]
+            - link "登录" [ref=f18e42] [cursor=pointer]:
+              - /url: https://accounts.google.com/ServiceLogin?passive=1209600&osid=1&continue=https://chromewebstore.google.com/search/HKUL%2520Search%2520Assist&followup=https://chromewebstore.google.com/search/HKUL%2520Search%2520Assist&ec=GAZApQM
+      - tablist [ref=f18e46]:
+        - generic [ref=f18e49]:
+          - tab "探索" [ref=f18e50] [cursor=pointer]
+          - tab "扩展程序" [ref=f18e51] [cursor=pointer]
+          - tab "主题" [ref=f18e52] [cursor=pointer]
+  - generic [ref=f18e56]:
+    - generic [ref=f18e58]:
+      - generic [ref=f18e59]:
+        - heading "类型" [level=2] [ref=f18e60]
+        - toolbar "按扩展程序类型筛选产品" [ref=f18e61]:
+          - button "扩展程序" [ref=f18e64] [cursor=pointer]
+          - button "主题" [ref=f18e69] [cursor=pointer]
+      - generic [ref=f18e72]:
+        - heading "过滤条件" [level=2] [ref=f18e73]
+        - generic [ref=f18e75] [cursor=pointer]:
+          - checkbox "精选扩展程序" [ref=f18e77]
+          - generic [ref=f18e78]: 精选扩展程序
+        - generic [ref=f18e81] [cursor=pointer]:
+          - checkbox "知名发布者" [ref=f18e83]
+          - generic [ref=f18e84]: 知名发布者
+      - generic [ref=f18e86]:
+        - heading "评分" [level=2] [ref=f18e87]
+        - radiogroup "评分" [ref=f18e88]:
+          - radio "5 星" [ref=f18e89]
+          - radio "4 星及以上" [ref=f18e95]:
+            - generic [ref=f18e102]: 及以上
+          - radio "3 星及以上" [ref=f18e103]:
+            - generic [ref=f18e111]: 及以上
+          - radio "2 星及以上" [ref=f18e112]:
+            - generic [ref=f18e121]: 及以上
+      - generic [ref=f18e123]:
+        - button "“清除所有过滤条件”按钮。" [disabled] [ref=f18e124]:
+          - generic [ref=f18e126]: 全部清除
+        - tooltip [ref=f18e127]: 重置您的过滤选项。
+    - main [ref=f18e128]:
+      - generic [ref=f18e129]:
+        - heading "搜索结果" [level=1] [ref=f18e130]
+        - generic [ref=f18e132]:
+          - link "HKUL Search Assistant" [ref=f18e133] [cursor=pointer]:
+            - /url: ./detail/hkul-search-assistant/lfjmkaiddobaebgokockcncpchpbnoad
+          - generic [ref=f18e135]:
+            - heading "HKUL Search Assistant" [level=2] [ref=f18e137]
+            - paragraph
+            - generic [ref=f18e138]:
+              - img "平均评分为 5 星（最高为 5 星）。" [ref=f18e139]:
+                - generic [ref=f18e140]: "5.0"
+              - link "详细了解“HKUL Search Assistant”的结果和评价。" [ref=f18e149] [cursor=pointer]:
+                - /url: https://support.google.com/chrome_webstore/answer/12225786?p=cws_reviews_results&hl=zh-CN
+            - paragraph [ref=f18e150]: Search the HKU Libraries Catalogue without leaving your current page
+  - contentinfo [ref=f18e151]:
+    - list [ref=f18e152]:
+      - listitem [ref=f18e153]:
+        - link "关于 Chrome 应用商店" [ref=f18e154] [cursor=pointer]:
+          - /url: https://support.google.com/chrome_webstore/answer/1047776?hl=zh-CN
+        - text: •
+      - listitem [ref=f18e155]:
+        - link "开发者信息中心" [ref=f18e156] [cursor=pointer]:
+          - /url: https://chrome.google.com/webstore/devconsole/
+        - text: •
+      - listitem [ref=f18e157]:
+        - link "隐私权政策" [ref=f18e158] [cursor=pointer]:
+          - /url: https://myaccount.google.com/privacypolicy?hl=zh-CN
+        - text: •
+      - listitem [ref=f18e159]:
+        - link "服务条款" [ref=f18e160] [cursor=pointer]:
+          - /url: https://ssl.gstatic.com/chrome/webstore/intl/zh-CN/gallery_tos.html
+        - text: •
+      - listitem [ref=f18e161]:
+        - link "帮助" [ref=f18e162] [cursor=pointer]:
+          - /url: https://support.google.com/chrome_webstore?hl=zh-CN

@@ -1,0 +1,7 @@
+{
+  "name": "literature_reviewer",
+  "private": true,
+  "devDependencies": {
+    "@playwright/mcp": "^0.0.79"
+  }
+}

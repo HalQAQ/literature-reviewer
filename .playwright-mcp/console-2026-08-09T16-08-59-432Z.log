@@ -1,0 +1,30 @@
+[    3506ms] [LOG] [runStartupCode] 2026-08-09T16:09:02.937Z top? true @ https://julac-hku.primo.exlibrisgroup.com/discovery/lib/bundle.js?version=58bfe6c3d1:3
+[    3524ms] [LOG] [whenJwtSyncReady] returning promise; resolved? false @ https://julac-hku.primo.exlibrisgroup.com/discovery/lib/bundle.js?version=58bfe6c3d1:3
+[    3535ms] [LOG] [loginIframe.directive] async trySilentLogin() path triggered @ https://julac-hku.primo.exlibrisgroup.com/discovery/lib/bundle.js?version=58bfe6c3d1:62
+[    3535ms] [LOG] [trySilentLogin] disabled in this view @ https://julac-hku.primo.exlibrisgroup.com/discovery/lib/bundle.js?version=58bfe6c3d1:25
+[    3536ms] [LOG] try silent login: false @ https://julac-hku.primo.exlibrisgroup.com/discovery/lib/bundle.js?version=58bfe6c3d1:62
+[    3558ms] [LOG] Search for query: any,contains,DMRT proteins and coordination of mammalian spermatogenesis scope: MyInst_and_CI facets:  sorted by:rank is related items:undefined @ https://julac-hku.primo.exlibrisgroup.com/discovery/lib/bundle.js?version=58bfe6c3d1:9
+[    3561ms] [ERROR] TypeError: Cannot read properties of undefined (reading 'length')
+    at e (https://julac-hku.primo.exlibrisgroup.com/discovery/lib/bundle.js?version=58bfe6c3d1:80:19379)
+    at Object.a [as invoke] (https://julac-hku.primo.exlibrisgroup.com/discovery/lib/angular.js?version=4b036d9fe7:1:23961)
+    at Object.r [as directiveControllerFactory] (https://julac-hku.primo.exlibrisgroup.com/discovery/lib/bundle.js?version=58bfe6c3d1:46:29799)
+    at i (https://julac-hku.primo.exlibrisgroup.com/discovery/lib/bundle.js?version=58bfe6c3d1:46:20260)
+    at Object.a [as invoke] (https://julac-hku.primo.exlibrisgroup.com/discovery/lib/angular.js?version=4b036d9fe7:1:23961)
+    at f.instance (https://julac-hku.primo.exlibrisgroup.com/discovery/lib/angular.js?version=4b036d9fe7:2:21158)
+    at d (https://julac-hku.primo.exlibrisgroup.com/discovery/lib/angular.js?version=4b036d9fe7:2:7305)
+    at a (https://julac-hku.primo.exlibrisgroup.com/discovery/lib/angular.js?version=4b036d9fe7:2:3602)
+    at d (https://julac-hku.primo.exlibrisgroup.com/discovery/lib/angular.js?version=4b036d9fe7:2:7945)
+    at a (https://julac-hku.primo.exlibrisgroup.com/discovery/lib/angular.js?version=4b036d9fe7:2:3602) @ https://julac-hku.primo.exlibrisgroup.com/discovery/lib/angular.js?version=4b036d9fe7:2
+[    3562ms] [LOG] [whenJwtSyncReady] returning promise; resolved? false @ https://julac-hku.primo.exlibrisgroup.com/discovery/lib/bundle.js?version=58bfe6c3d1:3
+[    3588ms] [WARNING] ARIA: Attribute " aria-label ", required for accessibility, is missing on node: JSHandle@node @ https://julac-hku.primo.exlibrisgroup.com/discovery/lib/angular.js?version=4b036d9fe7:2
+[    3623ms] [WARNING] ARIA: Attribute " aria-label ", required for accessibility, is missing on node: JSHandle@node @ https://julac-hku.primo.exlibrisgroup.com/discovery/lib/angular.js?version=4b036d9fe7:2
+[    3643ms] [WARNING] ARIA: Attribute " aria-label ", required for accessibility, is missing on node: JSHandle@node @ https://julac-hku.primo.exlibrisgroup.com/discovery/lib/angular.js?version=4b036d9fe7:2
+[    3662ms] [WARNING] ARIA: Attribute " aria-label ", required for accessibility, is missing on node: JSHandle@node @ https://julac-hku.primo.exlibrisgroup.com/discovery/lib/angular.js?version=4b036d9fe7:2
+[    3672ms] [WARNING] ARIA: Attribute " aria-label ", required for accessibility, is missing on node: JSHandle@node @ https://julac-hku.primo.exlibrisgroup.com/discovery/lib/angular.js?version=4b036d9fe7:2
+[    3724ms] [LOG] eyJraWQiOiJwcmltYVByaXZhdGVLZXktODUySlVMQUNfSEtVIiwiYWxnIjoiRVMyNTYifQ.eyJpc3MiOiJQcmltYSIsImp0aSI6IiIsImV4cCI6MTc4NjM3ODE0MywiaWF0IjoxNzg2MjkxNzQzLCJ1c2VyTmFtZSI6ImFub255bW91cy0wODA5XzE2MDkwMyIsImRpc3BsYXlOYW1lIjpudWxsLCJ1c2VyIjoiYW5vbnltb3VzLTA4MDlfMTYwOTAzIiwidXNlckdyb3VwIjoiR1VFU1QiLCJpbnN0aXR1dGlvbiI6Ijg1MkpVTEFDX0hLVSIsInVzZXJJcCI6IjE3NS4xNTkuMTc4Ljk1IiwiYXV0aGVudGljYXRpb25Qcm9maWxlIjoiIiwiYXV0aGVudGljYXRpb25TeXN0ZW0iOiIiLCJsYW5ndWFnZSI6ImVuIiwic2FtbFNlc3Npb25JbmRleCI6IiIsInNhbWxOYW1lSWQiOiIiLCJvbkNhbXB1cyI6ImZhbHNlIiwic2lnbmVkSW4iOm51bGwsInZpZXdJZCI6Ijg1MkpVTEFDX0hLVTpIS1U_dmlkPTg1MkpVTEFDX0hLVTpIS1UiLCJzZWxmUmVnaXN0ZXJlZCI6bnVsbCwicmVzdHJpY3RlZFVzZXIiOm51bGx9.E6q5yiJVpxDad3aL6meh0Wm8ztonBs3c3UbNLbYegU8DjYCg8cjPU843BQiCgKsvEk8SR-B6Es_1K48GH7_XjQ @ https://julac-hku.primo.exlibrisgroup.com/discovery/lib/bundle.js?version=58bfe6c3d1:93
+[    3726ms] [LOG] [runStartupCode] resolving jwtSyncDeferred (tab uuid = 7381afeb-997b-48e4-be88-d83bf91d47c4 ) @ https://julac-hku.primo.exlibrisgroup.com/discovery/lib/bundle.js?version=58bfe6c3d1:3
+[    3890ms] [WARNING] icon custom-ui:magnifying-glass not found @ https://julac-hku.primo.exlibrisgroup.com/discovery/lib/angular.js?version=4b036d9fe7:2
+[    3890ms] [WARNING] icon custom-ui:close not found @ https://julac-hku.primo.exlibrisgroup.com/discovery/lib/angular.js?version=4b036d9fe7:2
+[    3891ms] [WARNING] icon custom-ui:voice-search not found @ https://julac-hku.primo.exlibrisgroup.com/discovery/lib/angular.js?version=4b036d9fe7:2
+[    4314ms] [ERROR] Failed to load resource: the server responded with a status of 400 () @ https://julac-hku.primo.exlibrisgroup.com/primaws/rest/pub/pnxs?acTriggered=false&blendFacetsSeparately=false&citationTrailFilterByAvailability=true&disableCache=false&getMore=0&inst=852JULAC_HKU&isCDSearch=false&lang=en&limit=10&newspapersActive=false&newspapersSearch=false&offset=0&otbRanking=false&pcAvailability=false&q=any,contains,DMRT+proteins+and+coordination+of+mammalian+spermatogenesis&qExclude=&qInclude=&rapido=true&refEntryActive=false&rtaLinks=true&scope=MyInst_and_CI&searchInFulltextUserSelection=true&skipDelivery=Y&sort=rank&tab=Everything&vid=852JULAC_HKU:HKU%3Fvid%3D852JULAC_HKU:HKU:0
+[    6542ms] [LOG] start viewer:  @ https://julac-hku.primo.exlibrisgroup.com/discovery/lib/bower_components/pdfjs-viewer/newPdfjs/web/viewer.js:18

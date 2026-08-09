@@ -1,0 +1,156 @@
+- generic [ref=f21e9]:
+  - generic [ref=f21e10]:
+    - banner "Top Bar Region" [ref=f21e12]:
+      - generic:
+        - link "Skip To Main Menu" [ref=f21e13] [cursor=pointer]:
+          - /url: ""
+        - link "Skip To Search" [ref=f21e14] [cursor=pointer]:
+          - /url: ""
+        - link "Skip To Results" [ref=f21e15] [cursor=pointer]:
+          - /url: ""
+        - link "Skip To Facets" [ref=f21e16] [cursor=pointer]:
+          - /url: ""
+      - generic [ref=f21e18] [cursor=pointer]:
+        - generic "Library home page"
+        - link [ref=f21e19]:
+          - /url: /discovery/search?vid=852JULAC_HKU%3AHKU
+          - img "The library Logo" [ref=f21e20]
+      - navigation "Main Menu Region" [ref=f21e22]:
+        - group [ref=f21e24]:
+          - link "Research Assistant" [ref=f21e26] [cursor=pointer]:
+            - /url: /discovery/researchAssistant?vid=852JULAC_HKU%3AHKU
+          - link "New Search" [ref=f21e30] [cursor=pointer]:
+            - /url: /discovery/search?vid=852JULAC_HKU%3AHKU&lang=en
+          - button "HKU Libraries, opens in a new window" [ref=f21e33] [cursor=pointer]:
+            - generic [ref=f21e34]: HKU Libraries
+          - button "Databases, opens in a new window" [ref=f21e36] [cursor=pointer]:
+            - generic [ref=f21e37]: Databases
+          - button "ReadingList @HKUL, opens in a new window" [ref=f21e39] [cursor=pointer]:
+            - generic [ref=f21e40]: ReadingList @HKUL
+          - button "Quick Guide, opens in a new window" [ref=f21e42] [cursor=pointer]:
+            - generic [ref=f21e43]: Quick Guide
+          - button "More Options" [ref=f21e44] [cursor=pointer]
+      - generic [ref=f21e48]:
+        - button "qr" [ref=f21e49] [cursor=pointer]
+        - link "Go to my favorites" [ref=f21e52] [cursor=pointer]:
+          - /url: /discovery/favorites?vid=852JULAC_HKU%3AHKU&lang=en&section=items
+      - generic [ref=f21e54]:
+        - button "Sign In" [ref=f21e55] [cursor=pointer]: Sign in
+        - button "Menu" [ref=f21e57] [cursor=pointer]:
+          - generic [ref=f21e59]: ▼
+    - heading "Search results page" [level=1] [ref=f21e60]
+    - search "Search Bar Region" [ref=f21e62]:
+      - generic [ref=f21e63]:
+        - generic [ref=f21e67]:
+          - button [ref=f21e68] [cursor=pointer]
+          - generic [ref=f21e70]:
+            - generic [ref=f21e72]:
+              - generic [ref=f21e73]:
+                - combobox "Search field" [active] [ref=f21e74]: Functional assessment of DMRT1 variants and their pathogenicity
+                - button "Clear search text" [ref=f21e75] [cursor=pointer]:
+                  - generic [ref=f21e77]: Clear
+              - status [ref=f21e78]
+            - button [ref=f21e84]:
+              - generic [ref=f21e85]:
+                - button "Books & Articles+" [ref=f21e88]
+                - generic [ref=f21e89]: ▼
+            - generic [ref=f21e90]:
+              - button "Open voice search" [ref=f21e91] [cursor=pointer]
+              - button "Submit search" [ref=f21e93] [cursor=pointer]
+        - button "Advanced Search" [ref=f21e96] [cursor=pointer]
+  - generic [ref=f21e102]:
+    - alert [ref=f21e104]:
+      - generic [ref=f21e105]:
+        - generic [ref=f21e106]: HKU Patrons, please
+        - button "Sign in" [ref=f21e108] [cursor=pointer]
+        - button "DISMISS" [ref=f21e112] [cursor=pointer]
+    - paragraph [ref=f21e117]:
+      - text: "Automated note:"
+      - strong [ref=f21e118]: Service disruption
+      - text: detected. Some functions (eg requests, renewals, availability statuses, and/or links to full-text) may be temporarily unavailable
+    - document [ref=f21e119]:
+      - main "Search Results Region" [ref=f21e120]:
+        - generic [ref=f21e121]:
+          - generic [ref=f21e125]:
+            - paragraph [ref=f21e126]:
+              - button "Didn't find what you were looking for? Click here to expand your search" [ref=f21e127] [cursor=pointer]: Expand your search to include items from other libraries
+            - paragraph
+          - generic [ref=f21e129]:
+            - heading "Results" [level=2] [ref=f21e130]
+            - generic [ref=f21e133]:
+              - generic [ref=f21e134]:
+                - checkbox "Select all displayed records" [ref=f21e135] [cursor=pointer]
+                - generic [ref=f21e138]: 0 selected
+              - button "Choose the number of results to display per page 1-1 of 1 Results" [ref=f21e145]:
+                - generic [ref=f21e146]:
+                  - generic [ref=f21e147]: 1-1 of 1 Results
+                  - generic [ref=f21e148]: ▼
+              - button "Select your preferred disciplines" [ref=f21e151] [cursor=pointer]:
+                - checkbox "Personalize" [ref=f21e152]
+              - generic [ref=f21e157]:
+                - generic [ref=f21e158]:
+                  - generic [ref=f21e159]: You have selected 0 records
+                  - button "Export all results" [ref=f21e160] [cursor=pointer]
+                  - button "DISMISS" [ref=f21e161] [cursor=pointer]
+                - button "Add selected items to Favorites - Disabled Select Items below to enable controls" [disabled] [ref=f21e164]
+                - button "&quot;Push to&quot; actions - Disabled Select Items below to enable controls" [disabled] [ref=f21e167]
+            - generic [ref=f21e169]:
+              - list [ref=f21e170]:
+                - listitem [ref=f21e171]:
+                  - generic [ref=f21e172]:
+                    - generic [ref=f21e173]:
+                      - generic [ref=f21e174]: "1"
+                      - checkbox "Select record Functional assessment of DMRT1 variants and their pathogenicity for isolated male infertility" [ref=f21e176] [cursor=pointer]
+                      - link "Image 1" [ref=f21e182] [cursor=pointer]:
+                        - /url: https://julac-hku.primo.exlibrisgroup.com/discovery/fulldisplay?docid=cdi_elsevier_sciencedirect_doi_10_1016_j_fertnstert_2022_10_032&context=PC&vid=852JULAC_HKU:HKU&lang=en&search_scope=MyInst_and_CI&adaptor=Primo Central&tab=Everything&query=any%2Ccontains%2CFunctional%20assessment%20of%20DMRT1%20variants%20and%20their%20pathogenicity
+                      - generic [ref=f21e185]:
+                        - generic [ref=f21e186]: Article
+                        - generic [ref=f21e187]:
+                          - heading [level=3] [ref=f21e188] [cursor=pointer]:
+                            - link [ref=f21e189]:
+                              - /url: https://julac-hku.primo.exlibrisgroup.com/discovery/fulldisplay?docid=cdi_elsevier_sciencedirect_doi_10_1016_j_fertnstert_2022_10_032&context=PC&vid=852JULAC_HKU:HKU&lang=en&search_scope=MyInst_and_CI&adaptor=Primo Central&tab=Everything&query=any%2Ccontains%2CFunctional%20assessment%20of%20DMRT1%20variants%20and%20their%20pathogenicity
+                              - generic [ref=f21e192]:
+                                - mark [ref=f21e193]: Functional assessment of DMRT1 variants and their pathogenicity
+                                - text: for isolated male infertility
+                          - generic [ref=f21e194]: Emich, Jana ; Gaikwad, Avinash S. ; Stallmeyer, Birgit ; Fietz, Daniela ; Schuppe, Hans-Christian ; Oud, Manon S. ; Kliesch, Sabine ; Gromoll, Jörg ; Friedrich, Corinna ; Tüttelmann, Frank
+                          - generic [ref=f21e198]: "United States: Elsevier Inc"
+                          - generic [ref=f21e202]: Fertility and sterility, 2023-02, Vol.119 (2), p.219-228
+                        - generic [ref=f21e210]:
+                          - text: .... Luciferase assays with human
+                          - mark [ref=f21e211]: DMRT1 variants
+                          - text: to test
+                          - mark [ref=f21e212]: functional
+                          - text: effects on the CYP19A1 and Stra8...
+                        - generic [ref=f21e216]:
+                          - generic [ref=f21e217]: Peer Reviewed
+                          - generic [ref=f21e220]: Open Access
+                        - generic [ref=f21e224]:
+                          - generic [ref=f21e225]:
+                            - link "Download PDF" [ref=f21e228] [cursor=pointer]:
+                              - /url: https://libkey.io/libraries/371/articles/541664628/full-text-file?utm_source=api_632&allow_speedbump=true
+                            - link "Functional assessment of DMRT1 variants and their pathogenicity for isolated male infertility Full text available , opens in a new window" [ref=f21e233] [cursor=pointer]:
+                              - generic [ref=f21e234]: ", opens in a new window"
+                              - generic [ref=f21e235]: Functional assessment of DMRT1 variants and their pathogenicity for isolated male infertility
+                              - generic [ref=f21e236]: Full text available
+                          - link "View Issue Contents" [ref=f21e239] [cursor=pointer]:
+                            - /url: https://browzine.com/libraries/371/journals/7810/issues/505499222?showArticleInContext=doi:10.1016%2Fj.fertnstert.2022.10.032&utm_source=api_632
+                    - region "Actions for Functional assessment of DMRT1 variants and their pathogenicity for isolated male infertility" [ref=f21e242]:
+                      - generic [ref=f21e244]:
+                        - link "citing this" [ref=f21e246] [cursor=pointer]:
+                          - /url: /discovery/citationTrails?query=any%2Ccontains%2CFunctional%20assessment%20of%20DMRT1%20variants%20and%20their%20pathogenicity&vid=852JULAC_HKU%3AHKU&facet=citedby%2Cexact%2Ccdi_FETCH-LOGICAL-b539t-18df956e28fa4a9194d8f1daf30c630480c1da8212a86bff57b4ae2421519fe43&seed_id=cdi_elsevier_sciencedirect_doi_10_1016_j_fertnstert_2022_10_032%2Ccitedby%2Ccdi_FETCH-LOGICAL-b539t-18df956e28fa4a9194d8f1daf30c630480c1da8212a86bff57b4ae2421519fe43&offset=0&came_from=citationTtrailsIndication
+                        - link "cited in this" [ref=f21e249] [cursor=pointer]:
+                          - /url: /discovery/citationTrails?query=any%2Ccontains%2CFunctional%20assessment%20of%20DMRT1%20variants%20and%20their%20pathogenicity&vid=852JULAC_HKU%3AHKU&facet=citing%2Cexact%2Ccdi_FETCH-LOGICAL-b539t-18df956e28fa4a9194d8f1daf30c630480c1da8212a86bff57b4ae2421519fe43&seed_id=cdi_elsevier_sciencedirect_doi_10_1016_j_fertnstert_2022_10_032%2Cciting%2Ccdi_FETCH-LOGICAL-b539t-18df956e28fa4a9194d8f1daf30c630480c1da8212a86bff57b4ae2421519fe43&offset=0&came_from=citationTtrailsIndication
+                      - button "Citation of Functional assessment of DMRT1 variants and their pathogenicity for isolated male infertility" [ref=f21e251] [cursor=pointer]
+                      - button "E-mail of Functional assessment of DMRT1 variants and their pathogenicity for isolated male infertility" [ref=f21e253] [cursor=pointer]
+                      - button "Add item Functional assessment of DMRT1 variants and their pathogenicity for isolated male infertility to favorites" [ref=f21e257] [cursor=pointer]
+                      - button "Show actions options for Functional assessment of DMRT1 variants and their pathogenicity for isolated male infertility" [ref=f21e260] [cursor=pointer]
+              - generic [ref=f21e267]:
+                - text: Results Per Page
+                - generic [ref=f21e268]:
+                  - button "Display 10 results per page" [ref=f21e269]: "10"
+                  - button "Display 25 results per page" [ref=f21e270] [cursor=pointer]: "25"
+                  - button "Display 50 results per page" [ref=f21e271] [cursor=pointer]: "50"
+        - complementary "Facets Region" [ref=f21e272]:
+          - heading "Refine results" [level=2] [ref=f21e277]
+        - button "Expand Research Assistant widget" [ref=f21e278] [cursor=pointer]:
+          - generic [ref=f21e280]: Research Assistant
