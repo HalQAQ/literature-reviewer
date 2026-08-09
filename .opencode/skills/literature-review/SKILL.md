@@ -94,13 +94,20 @@ description: "生物医学文献检索与综述。当用户要求检索文献、
 
 严格按以下结构输出（内容写入 Markdown 文件，不重复贴进聊天）：
 
+**引用格式（强制）**：
+- 正文中每个引用标记必须是 **直接指向 DOI 的可点击链接**：
+  `[[1]](https://doi.org/10.xxxx)` 而非 `[1]`
+  多个引用时每个都单独链接：`[[1]](https://doi.org/10.xxxx)[[2]](https://doi.org/10.yyyy)`
+- References 中每条 DOI 必须是可点击的 Markdown 链接：
+  `[1] First author et al. Year. Title. Journal. PMID:xxxx | [DOI:10.xxxx](https://doi.org/10.xxxx)`
+
 ```
 ## Executive Summary
 2-4 sentences answering the user's question directly, each conclusion followed by a citation marker.
 
 ## Detailed Answer
 Organized into logical subsections. Each claim formatted as:
-**Claim** [n]
+**Claim** [[n]](#refN)
 Supporting details (methods, data, conclusions), citing full-text passages.
 Each subsection cites at least 1 source; cross-validate with multiple sources where possible.
 
@@ -112,7 +119,7 @@ Explicitly list: what remains controversial/unverified/not covered by the retrie
 
 ## References
 One per line, strict format; n must match in-text citations 1:1:
-[n] First author et al. Year. Title. Journal. PMID:xxxx | DOI:xxxx | URL:https://doi.org/xxxx
+[1] First author et al. Year. Title. Journal. PMID:xxxx | [DOI:10.xxxx](https://doi.org/10.xxxx)
 ```
 
 ### Table requirements (multi-paper comparison)
