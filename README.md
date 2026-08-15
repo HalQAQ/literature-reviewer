@@ -20,6 +20,13 @@ Ask OpenCode to search literature on a topic. The `literature-review` skill hand
 Reports are saved to `reports/` in Markdown format. Deep-reading reports use the filename
 `<First Author> et al. - <Journal> - <Year>.md` (e.g. `Zhang et al. - PLoS genetics - 2016.md`).
 
+## Report location
+
+- By default, reports are saved to `reports/` in this workspace.
+- If you ask for reports to be written **elsewhere** (e.g. inside another project you are
+  working on), they are saved to `<target-path>/paper_reports/`. The `paper_reports`
+  subfolder is created automatically if it does not exist.
+
 ## Mode 3: Single-paper deep reading
 
 Given a single paper (by PMID, DOI, title, or a local PDF/text file), the agent
