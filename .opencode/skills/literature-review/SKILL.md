@@ -140,7 +140,8 @@ Where should the report be saved?
 3. 缓存缺失时，对每篇候选运行 `python scripts/mode2_full_text.py --pmid <id>` 或 `--doi <doi>`：
    - 若输出 `OK: ... saved to cache/xxx.txt`：全文已保存为本地文本，继续。
    - 若输出 `PAYWALLED:`：文章无开放全文。使用 `hku-browser` MCP 通过 HKU EZproxy 获取（见下）。
-4. 不要下载/保存 PDF 全文到本地，只用文本提取。
+4. **全文提取优先用网页文本，PDF 下载是兜底（不是首选）**。默认路径仍是：在网页上滚动 + `browser_evaluate` 提取纯文本保存为 `cache/<pmid>_<source>.txt`。**仅当网页文本提取困难/不完整时**（如 EBSCO PDF viewer 的 text layer 乱序或缺失、正文为图片型 PDF 等），才回退到把 PDF 保存到本地再离线提取文本。PDF 兜底流程见下文"PDF 兜底提取（EBSCO 等 PDF viewer）"。
+   - 保存的 PDF 放在 `cache/<pmid>.pdf`（或 `cache/<pmid>_<source>.pdf`），提取出的文本仍放 `cache/<pmid>_<source>.txt`，以便 `snippets.py` 正常使用。
 
 ### HKU EZproxy 全文获取（模式二核心路径）
 
@@ -180,6 +181,25 @@ Where should the report be saved?
 - **`browser_evaluate` 的返回必须是不带对象的纯字符串**，否则保存到文件的是 JSON。
 - 保存到 `cache/<pmid>_<source>.txt`。
 
+### PDF 兜底提取（EBSCO 等 PDF viewer；非首选，仅当网页文本提取不完整时）
+
+**背景/触发条件**：某些 publisher 全文以 PDF viewer 形式提供，网页 text layer 可能：
+- 只渲染当前可见页（需反复滚动才逐步加载，且顺序可能乱序/残缺）；
+- 正文以 canvas/图片渲染，`innerText` 缺大段文字，关键词（如 "intracranial"、"germinoma"）都搜不到；
+- 分页区域（`role="region" aria-label^="Page"`）文本缺失或与页面顺序不对应。
+
+遇到上述情况，**先尝试**滚动整个 viewer（找到真正可滚动容器，如 `[class*="pdf-viewer__viewport"]`，反复从 0 滚到 `scrollHeight`）后重提取；若仍不完整，再走 PDF 兜底。
+
+**PDF 兜底流程（EBSCO viewer 为例，已验证）**：
+1. 打开该文的 viewer 页（如 `https://research-ebsco-com.eproxy.lib.hku.hk/c/<opid>/viewer/pdf/<recordId>?route=details`）。
+2. 用 `browser_network_requests` 找到真实 PDF 流：过滤 `content|pdf`，定位到 `https://content.ebscohost.com/cds/retrieve?content=<token>`（返回 200 且是 `%PDF` 二进制）；`/api/.../fulltext/pdf?...` 返回的往往是 JSON 错误，别用。
+3. 在同一页面上下文里 `fetch(url)` → `arrayBuffer` → 逐字节拼 binary string → `btoa()` 得到 base64 → 用 `browser_evaluate` 的 `filename` 保存（注意 filename 必须落在允许根内：工作区或 `.playwright-mcp`；`C:\Users\...\Temp` 会被拒绝）。
+   - 或改用 `page.request.get(url)` 取 `body`（`Uint8Array`）判断 `%PDF` 头；保存文件需在 Playwright 沙箱里 `fs.writeFileSync`，但该沙箱无 `require`/`Buffer`/动态 import，直接写文件会报错——**最可靠是 base64 经 `filename` 落盘**。
+4. 用 pypdf 离线提取：`python -c` 或小脚本 `PdfReader(path).pages[i].extract_text()`，按页拼 `===== PAGE N =====`，写入 `cache/<pmid>_fulltext.txt`。`pip install pypdf` 若未装先装。
+5. 之后照常用 `snippets.py` 抽取，并把结果绑定到 PMID/DOI。
+
+**纪律**：PDF 只作为文本来源，不散播/不外发；保存位置在 `cache/` 内；能网页文本解决的就不下 PDF。
+
 ### RAG 段落抽取（核心：只注入相关片段）
 
 对每篇已获取全文的候选文章：
@@ -195,6 +215,13 @@ Where should the report be saved?
 - 用 `browser_evaluate` 返回**纯字符串**，通过 `filename` 保存；不要返回对象。
 - 提取时用 Set 去重，跳过短文本，`h2/h3` 写成 `## 标题` 以配合 `snippets.py` 的章节归属。
 - 若页面显示 HKUL 登录表单（会话过期），按上面"手动登录"流程处理：请用户手动输入 UID 与 PIN，agent 只点提交，不得读取密码明文。
+- 若页面是 PDF viewer（如 EBSCO）且 text layer 提取不完整，按上面"PDF 兜底提取"流程处理：找到 `content.ebscohost.com/cds/retrieve` 的 PDF 流 → base64 落盘 → pypdf 离线提取。
+
+### 检索漏检教训（重要）
+
+单靠窄查询（如只含 "germinoma" / "intracranial germinoma"）会漏掉**以其它主题为主、germinoma 只是样本子集**的论文（例如主题为 BMP/TGF-β 通路、样本集里含一个颅内 germinoma 的分子研究）。这类论文的标题/摘要常不含 germinoma 关键词，title/abstract 检索抓不到。
+- 用户若明确要求"包含 germinoma 只是研究的一小部分的论文"，检索方案必须更宽：增加**机理/通路类上位词**（如 BMP、TGF-beta、developmental signalling）+ 组织学类别词（germ cell tumor、dysgerminoma、seminoma）的多角度组合，并在 Step 3 向用户确认覆盖度。
+- 若用户事后指出漏掉的某篇，立即按该文实际标题检索定位、获取全文并补进报告，并在 Screening Notes 里记录"初筛漏检原因 + 补充过程"。
 
 ### 模式三：单篇文献精读（Deep Reading）
 
