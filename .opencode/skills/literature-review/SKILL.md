@@ -150,26 +150,21 @@ Where should the report be saved?
 1. `.hku-profile` 的 Chrome 被完全关闭过 → 登录会话丢失，下次需要重新登录（只需一次，登录后同会话内免重复登录）。
 2. 登录会话自然过期（EZproxy 会话有有效期）。
 
-### 自动登录（Chrome 密码自动填充 + agent 纪律）
+### 手动登录（会话过期时）
 
-**一次性准备（由用户完成）**：用户在 `.hku-profile` 的 Chrome 中手动登录一次 HKU 时，Chrome 会弹出"保存密码？/ Save password?"，用户点击保存，密码即存入该 profile 的 Chrome 密码管理器。此后 EZproxy 会话过期时即可自动填充。
+`.hku-profile` 的 Chrome **不保存任何 HKU 密码**。Chrome 原生密码自动填充的下拉属于浏览器 UI 而非页面 DOM，agent 无法操作它，故不采用自动填充方案。EZproxy 会话过期出现 HKUL Authentication 登录页时：
 
-**遇到 HKUL Authentication 登录页时的自动登录流程（agent 执行）**：
-1. 等待 Chrome 自动填充用户名和密码（autofill 通常瞬间完成）。
-2. **只检查密码框是否已填充，绝不读取密码值**：用 `browser_evaluate` 返回布尔/长度，如
-   `() => !!document.querySelector('input[type=password]') && document.querySelector('input[type=password]').value.length > 0`
-   （返回 `true/false`，不要返回 `value` 本身）。
-3. 若已填充 → 直接点击 "Sign in" / "Log in" 提交按钮，等待跳转回目标全文页。
-4. 若未填充（Chrome 未提示保存过密码，或 autofill 未触发）→ **不要自己输入密码**。将光标聚焦到密码框，请用户手动输入并提交；agent 只负责点击提交按钮与后续流程。
-5. 登录成功后继续原流程（滚动页面 → 提取正文）。
+1. 将光标聚焦到用户名（UID）输入框，**请用户手动输入 UID 和 PIN**（agent 不替用户输入、也不读取字段值）。
+2. 用户输入完成后，agent 点击 "Submit" 提交，等待跳转回目标全文页。
+3. 登录成功后继续原流程（滚动页面 → 提取正文）。
 
-**自动登录纪律（违反即失败）**：
+**纪律（违反即失败）**：
 - **绝不用 `browser_evaluate`（或任何方式）读取 `input[type=password]` 的值**，也不得把密码写进任何文件/输出。
 - **绝不打开 `chrome://settings/passwords`** 或任何展示已存密码的页面。
 - **绝不读取/解密 `.hku-profile` 目录下的 `Login Data` 等密码库文件**。
-- agent 全程不接触密码明文；密码只存在于用户已保存的 Chrome 密码管理器中，由浏览器自动填充。
+- agent 全程不接触密码明文。
 
-若按上述流程仍无法登录（如需要 2FA/验证码），明说"需要你手动完成登录"，然后继续。
+登录会话持久保存在 `.hku-profile`，登录后一段时间内打开付费文章无需再次登录；仅当会话自然过期时才需用户再手动登录一次。
 
 **标准路径（已验证）**——HKU 的 EZproxy 是访问导向式，必须经 Find@HKUL 获取重写后的全文 URL：
 1. 打开 Primo 搜索页（正确 URL，避免 vid 双编码）：
@@ -199,7 +194,7 @@ Where should the report be saved?
 - ScienceDirect 等 publisher 正文是懒加载，抓取前必须滚动整个页面。
 - 用 `browser_evaluate` 返回**纯字符串**，通过 `filename` 保存；不要返回对象。
 - 提取时用 Set 去重，跳过短文本，`h2/h3` 写成 `## 标题` 以配合 `snippets.py` 的章节归属。
-- 若页面显示 HKUL 登录表单（会话过期），按上面"自动登录"流程处理（等 Chrome 自动填充 → 只点提交；未填充则请用户手动输入），不得读取密码明文。
+- 若页面显示 HKUL 登录表单（会话过期），按上面"手动登录"流程处理：请用户手动输入 UID 与 PIN，agent 只点提交，不得读取密码明文。
 
 ### 模式三：单篇文献精读（Deep Reading）
 
