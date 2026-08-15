@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""fulltext.py - Fetch full text for a PMID or DOI.
+"""mode2_full_text.py - Fetch full text for a PMID or DOI.
 
 Priority:
   1. Open-access full text via Europe PMC (free, no subscription).
@@ -10,14 +10,15 @@ Output: plain-text file saved to <outdir>/<pmid>.txt and prints its path,
 plus a summary of sections. Does NOT download any PDFs.
 
 Usage:
-  python fulltext.py --pmid 24930130 [--outdir cache]
-  python fulltext.py --doi 10.1038/nmeth.2999 [--outdir cache]
+  python mode2_full_text.py --pmid 24930130 [--outdir cache]
+  python mode2_full_text.py --doi 10.1038/nmeth.2999 [--outdir cache]
 """
 
 import argparse
 import os
 import re
 import sys
+import time
 import urllib.parse
 
 import requests
@@ -102,6 +103,7 @@ def ezproxy_url(doi, pmid=None):
 
 
 def main():
+    t0 = time.perf_counter()
     ap = argparse.ArgumentParser()
     ap.add_argument("--pmid")
     ap.add_argument("--doi")
@@ -136,6 +138,7 @@ def main():
             print(f"OK: open-access full text saved to {out_path}")
             print(f"WORDS: {len(text.split())}")
             print(f"PMID: {pmid} | DOI: {meta.get('doi', '')} | PMCID: {pmcid}")
+            print(f"ELAPSED: {time.perf_counter() - t0:.1f}s")
             sys.exit(0)
 
     # Paywalled / no OA full text
@@ -144,6 +147,7 @@ def main():
     print(f"TITLE: {title}")
     print(f"PMID: {pmid} | DOI: {meta.get('doi', '')}")
     print(f"EZPROXY_URL: {url}")
+    print(f"ELAPSED: {time.perf_counter() - t0:.1f}s")
     print("ACTION: open the EZPROXY_URL in the hku-browser MCP and extract the"
           " article body text from the page.")
 

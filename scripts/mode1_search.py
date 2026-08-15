@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""search.py - Mode 1 literature screening.
+"""mode1_search.py - Mode 1 literature screening.
 
 Queries PubMed, Europe PMC and Semantic Scholar, merges by PMID/DOI, and
 prints a ranked, deduplicated list of articles (title/abstract/authors/
@@ -10,8 +10,8 @@ spermatogenesis||DMRT1 germline commitment"). Results from all queries are
 merged and deduplicated. By default at least 10 results are targeted.
 
 Usage:
-  python search.py "<query>" [--limit N] [--json] [--output FILE]
-  python search.py "A||B||C" --limit 30 --output results.txt
+  python mode1_search.py "<query>" [--limit N] [--json] [--output FILE]
+  python mode1_search.py "A||B||C" --limit 30 --output results.txt
 """
 
 import argparse
@@ -199,6 +199,7 @@ def _score(rec):
 
 
 def main():
+    t0 = time.perf_counter()
     ap = argparse.ArgumentParser()
     ap.add_argument("query")
     ap.add_argument("--limit", type=int, default=DEFAULT_LIMIT)
@@ -222,6 +223,7 @@ def main():
                 print(f"[warn] {fn.__name__} failed for {q!r}: {e}", file=sys.stderr)
 
     merged = merge(results)
+    elapsed = time.perf_counter() - t0
 
     if args.json:
         out_text = json.dumps(merged, ensure_ascii=False, indent=2)
@@ -231,6 +233,7 @@ def main():
         else:
             sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8")
             print(out_text)
+        print(f"ELAPSED: {elapsed:.1f}s")
         return
 
     lines = []
@@ -253,6 +256,7 @@ def main():
     else:
         sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8")
         print(out_text)
+    print(f"ELAPSED: {elapsed:.1f}s")
 
 
 if __name__ == "__main__":

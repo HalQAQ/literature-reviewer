@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""paper.py - Mode 3 single-paper deep reading.
+"""mode3_deep_read.py - Mode 3 single-paper deep reading.
 
 Resolves one paper (from a PMID, DOI, title, or a local PDF/text file),
 prints its citation metadata, and fetches/reads its full text so the agent
@@ -13,18 +13,19 @@ then retrieves the body with the hku-browser MCP (Mode 2 path) and saves it
 to cache/<pmid>_<source>.txt.
 
 Usage:
-  python paper.py <pmid>             # e.g. 27583450
-  python paper.py 10.1371/journal.pgen.1006293
-  python paper.py "DMRT1 is required for mouse spermatogonial stem cell maintenance"
-  python paper.py --local "C:\\Users\\me\\Downloads\\paper.pdf"
+  python mode3_deep_read.py <pmid>    # e.g. 27583450
+  python mode3_deep_read.py 10.1371/journal.pgen.1006293
+  python mode3_deep_read.py "DMRT1 is required for mouse spermatogonial stem cell maintenance"
+  python mode3_deep_read.py --local "C:\\Users\\me\\Downloads\\paper.pdf"
 """
 
 import argparse
 import os
 import re
 import sys
+import time
 
-import fulltext
+import mode2_full_text
 
 EPMC = "https://www.ebi.ac.uk/europepmc/webservices/rest"
 INVALID_FS = r'[<>:"/\\|?*\x00-\x1f]'
@@ -37,7 +38,7 @@ def sanitize(s, fallback=""):
 
 
 def clean(s):
-    return fulltext.clean(s)
+    return mode2_full_text.clean(s)
 
 
 def lookup_by_title(title):
@@ -112,9 +113,9 @@ def fetch_web(args):
     print(f"LOOKUP_KIND: {kind}")
 
     if kind == "pmid":
-        meta = fulltext.lookup_by_pmid(ident)
+        meta = mode2_full_text.lookup_by_pmid(ident)
     elif kind == "doi":
-        meta = fulltext.lookup_by_doi(ident)
+        meta = mode2_full_text.lookup_by_doi(ident)
     else:
         candidates = lookup_by_title(ident)
         if not candidates:
@@ -132,9 +133,9 @@ def fetch_web(args):
     pmid, doi, pmcid = print_meta(meta)
     os.makedirs(args.outdir, exist_ok=True)
 
-    xml = fulltext.get_fulltext_xml(pmcid) if pmcid else None
+    xml = mode2_full_text.get_fulltext_xml(pmcid) if pmcid else None
     if xml:
-        text = fulltext.extract_text(xml)
+        text = mode2_full_text.extract_text(xml)
         if len(text) >= 200:
             out_path = os.path.join(args.outdir, f"{pmid or doi.replace('/', '_')}.txt")
             with open(out_path, "w", encoding="utf-8-sig") as f:
@@ -145,7 +146,7 @@ def fetch_web(args):
             print(f"WORDS: {len(text.split())}")
             return
 
-    url = fulltext.ezproxy_url(doi, pmid)
+    url = mode2_full_text.ezproxy_url(doi, pmid)
     print("PAYWALLED: no open-access full text available.")
     print(f"EZPROXY_URL: {url}")
     print("ACTION: open the EZPROXY_URL in the hku-browser MCP and extract the"
@@ -192,6 +193,7 @@ def fetch_local(args):
 
 
 def main():
+    t0 = time.perf_counter()
     ap = argparse.ArgumentParser()
     ap.add_argument("identifier", nargs="?", help="PMID, DOI, or paper title")
     ap.add_argument("--local", help="path to a local PDF/text file")
@@ -204,6 +206,7 @@ def main():
         fetch_web(args)
     else:
         ap.error("provide an identifier or --local")
+    print(f"ELAPSED: {time.perf_counter() - t0:.1f}s")
 
 
 if __name__ == "__main__":

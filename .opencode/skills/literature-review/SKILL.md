@@ -1,6 +1,6 @@
 ---
 name: literature-review
-description: "生物医学文献检索与综述。当用户要求检索文献、查询论文、写文献综述、总结某主题的研究进展、列出某细胞/分子/疾病的经典实验及其方法、或需要带引用的可信答案时使用。当用户要求**单篇文献精读**（给出某篇文献的标题/DOI/PMID/或本地文件路径，要求深读、总结、答疑）时使用。Trigger words: 文献, 论文, 文章, 检索, 综述, PubMed, 引用, 精读, 深读, 单篇文献, 单篇论文, literature, paper, article, citation, review, experiments, deep read, close read."
+description: "生物医学文献检索与综述。当用户要求检索文献、查询论文、写文献综述、总结某主题的研究进展、列出某细胞/分子/疾病的经典实验及其方法、或需要带引用的可信答案时使用。当用户要求**单篇文献精读**（给出某篇文献的标题/DOI/PMID/或本地文件路径，要求深读、总结、答疑）时使用。当用户**开始使用该工具**（如 "start using literature reviewer" / "start a literature search" / "开始文献检索"）时使用。Trigger words: 文献, 论文, 文章, 检索, 综述, PubMed, 引用, 精读, 深读, 单篇文献, 单篇论文, 开始, literature, paper, article, citation, review, experiments, deep read, close read, start."
 ---
 
 # 生物医学文献综述工作流
@@ -15,6 +15,70 @@ description: "生物医学文献检索与综述。当用户要求检索文献、
 4. **摘要不足以回答时，必须获取全文**（见下）。不得仅凭摘要推测方法细节。
 5. **输出格式固定**，见"输出格式"节，不得自由发挥。
 
+## 标准化使用流程（Standardized Flow）
+
+**所有用户交互提示一律使用英文。** 本流程适用于"新开一项检索/精读任务"；针对已生成报告的后续追问无需重新走完整流程。
+
+### Step 1: 开始
+
+- **入口 A（无具体需求）**：用户输入 "start using literature reviewer"、"start a literature search"、"开始文献检索" 等 → 进入 Step 2。
+- **入口 B（直接带需求）**：用户直接给出关键词和明确要求（如 "search articles about the BMP pathway"、"deep read PMID 27583450"、"精读 XXX 文章"）→ **跳过 Step 2**，从 Step 3 开始。
+- 用户既没给需求也没给模式时，一律按入口 A 处理。
+
+### Step 2: 介绍模式并请用户选择（仅入口 A）
+
+向用户介绍三种模式，请其选择并补充所需信息：
+
+```
+Which mode would you like to use?
+
+1. Title + Abstract Quick Search
+   - Finds what papers exist and their gist (title + abstract only).
+   - You provide: search direction / keywords (e.g. "BMP pathway in spermatogenesis").
+
+2. Full-Text Detailed Report
+   - Fetches full texts and writes a detailed, cited report.
+   - You provide: search direction / keywords.
+
+3. Single-Paper Deep Reading
+   - Reads one paper in depth and generates a report.
+   - You provide: the article's DOI / PMID / title, or the local file path.
+```
+
+用户回答后记录所选模式与所需信息。
+
+### Step 3: 确认方案（入口 B 也从这里开始）
+
+将待执行方案复述给用户并请求确认。英文示例：
+- 模式一/二：`Shall I run a quick search using keywords 'XX', 'YY'?` / `Shall I fetch full texts and generate a detailed report on 'XX'?`
+- 模式三：`Shall I deep-read 'XXX' and generate a report?`
+
+用户可修改或补充信息（如更换关键词、指定文章），**必须等用户最终确认后再执行**。
+
+### Step 4: 询问报告保存位置
+
+```
+Where should the report be saved?
+- Default: <workspace>\reports\
+- Custom:  enter a target path (the report will be saved to <target>\paper_reports\)
+```
+
+- 默认：工作区 `reports/`。
+- 自定义：用户给出目标路径 → 保存到 `<target>\paper_reports\`（不存在则创建），规则见"用户指定其它保存位置"。
+
+### Step 5: 执行
+
+按用户确认的模式执行检索/精读，生成并保存报告（模式一/二输出综述报告，模式三输出精读报告）。
+
+### Step 6: 完成汇报（英文）
+
+检索完成后，用英文一次性告知用户：
+- 检索到多少篇文章（`Found N articles`）
+- 经筛选/确认后认定有用的篇数（`N deemed useful after screening`）
+- 报告实际引用多少篇文献（`the report cites N references`）
+- 检索用时（duration，各脚本会输出 `ELAPSED: N.Ns`，直接引用该值）
+- 报告保存的完整路径（`Report saved to <path>`）
+
 ## 检索工作流
 
 ### 模式一：初筛（免费 API，无需 HKU 权限）
@@ -24,7 +88,7 @@ description: "生物医学文献检索与综述。当用户要求检索文献、
 1. 将用户问题转化为 **3-5 条检索 query**（英文）。要点：
    - 必须包含**多个角度的同义词/上位词**，避免单查询漏检。例如主题 DMRT1 生精，用 `"DMRT1 spermatogenesis||DMRT1 male germ cell||DMRT1 human germline commitment||DMRT1 testis development"`。
    - 单一窄词可能漏掉权威文章（如讲 germline commitment 而非 spermatogenesis 的论文），多查询合并才能覆盖。
-2. 运行 `python scripts/search.py "query1||query2||..." --limit N`（N 默认 30，保证合并后 ≥10 篇）。
+2. 运行 `python scripts/mode1_search.py "query1||query2||..." --limit N`（N 默认 30，保证合并后 ≥10 篇）。
 3. **若合并结果少于 10 篇**：添加更宽泛的检索词（上位概念、相关疾病/模型）重跑，直到 ≥10 篇。
 4. 阅读输出，按 rank_score（引用数为主要权重）评估，选出最相关的前 5-10 篇作为核心候选，其余留作背景。
 5. 记录每篇的 PMID/DOI 供后续引用。
@@ -35,7 +99,7 @@ description: "生物医学文献检索与综述。当用户要求检索文献、
 
 1. 先从模式一选出候选 PMID/DOI。
 2. **先查缓存**：检查 `cache/` 目录是否存在 `<pmid>.txt` 或 `<pmid>_*.txt`。若存在，直接复用缓存，跳过抓取（缓存可被用户清理，勿假设一定存在）。
-3. 缓存缺失时，对每篇候选运行 `python scripts/fulltext.py --pmid <id>` 或 `--doi <doi>`：
+3. 缓存缺失时，对每篇候选运行 `python scripts/mode2_full_text.py --pmid <id>` 或 `--doi <doi>`：
    - 若输出 `OK: ... saved to cache/xxx.txt`：全文已保存为本地文本，继续。
    - 若输出 `PAYWALLED:`：文章无开放全文。使用 `hku-browser` MCP 通过 HKU EZproxy 获取（见下）。
 4. 不要下载/保存 PDF 全文到本地，只用文本提取。
@@ -85,11 +149,11 @@ description: "生物医学文献检索与综述。当用户要求检索文献、
 适用：用户明确指定**一篇**文献，要求精读全文、做深度总结、回答具体问题（如"精读 PMID 27583450 这篇文章""精读这篇 PDF，回答：他们的结论是什么？"）。**单篇、精读、逐条答疑**是模式三的标志；跨多篇比较仍走模式一/二。
 
 1. **定位文献并获取全文**：
-   - 用户给了 **PMID / DOI / 标题**：运行 `python scripts/paper.py "<标识符>"`。脚本自动识别类型，解析第一作者/杂志/年份，并优先通过 Europe PMC 开放获取拉取全文，输出 `OK: ... saved to cache/<pmid>.txt`。
-   - 用户给了 **本地文件路径**：运行 `python scripts/paper.py --local "<绝对路径>"`。支持 PDF（用 pypdf 提取，若报错先 `pip install pypdf`）与纯文本/`.md`；脚本打印正文开头供识别作者/杂志/年份。
+   - 用户给了 **PMID / DOI / 标题**：运行 `python scripts/mode3_deep_read.py "<标识符>"`。脚本自动识别类型，解析第一作者/杂志/年份，并优先通过 Europe PMC 开放获取拉取全文，输出 `OK: ... saved to cache/<pmid>.txt`。
+   - 用户给了 **本地文件路径**：运行 `python scripts/mode3_deep_read.py --local "<绝对路径>"`。支持 PDF（用 pypdf 提取，若报错先 `pip install pypdf`）与纯文本/`.md`；脚本打印正文开头供识别作者/杂志/年份。
    - 输出 `PAYWALLED:`：走模式二"HKU EZproxy 全文获取"路径抓正文，保存到 `cache/<pmid>_<source>.txt`。
    - **先查缓存**：若 `cache/` 已存在对应 `<pmid>.txt`，直接复用，跳过抓取。
-2. **报告文件名（强制）**：`作者 + 杂志名称 + 发表时间`，格式为 `<第一作者姓> et al. - <杂志名> - <年份>.md`（单作者不加 "et al."），例如 `Zhang et al. - PLoS genetics - 2016.md`。`paper.py` 会打印 `REPORT_NAME:` 直接使用；本地文件则从正文头部提取作者/杂志/年份自行构造（缺失时尽力推断，实在无法确定再向用户确认）。
+2. **报告文件名（强制）**：`作者 + 杂志名称 + 发表时间`，格式为 `<第一作者姓> et al. - <杂志名> - <年份>.md`（单作者不加 "et al."），例如 `Zhang et al. - PLoS genetics - 2016.md`。`mode3_deep_read.py` 会打印 `REPORT_NAME:` 直接使用；本地文件则从正文头部提取作者/杂志/年份自行构造（缺失时尽力推断，实在无法确定再向用户确认）。
 3. **回答用户的精读问题**：用户精读要求中提出的每个具体问题，用 `python scripts/snippets.py "<问题>" cache/<file>.txt --top 8` 抽取相关段落作为事实来源，逐条回答。
 4. **生成精读报告**：按下面"文献精读报告结构"写入 `reports/<REPORT_NAME>`。对话中只简短告知保存路径与概要，不重复全文。
 5. **持续提问（Follow-up）**：
@@ -112,7 +176,7 @@ description: "生物医学文献检索与综述。当用户要求检索文献、
 - 保存位置：默认在工作区根目录下的 `reports/` 文件夹（不存在则创建）。
 - **用户指定其它保存位置**：当用户要求把报告保存到别处（如"保存到 D:\projects\foo"、"存到我另一个项目里"、"放到 XXX 项目下"），一律保存到 `<目标路径>\paper_reports\`。若 `<目标路径>` 或 `paper_reports` 子目录不存在，先用 `New-Item -ItemType Directory -Path <目标路径>\paper_reports -Force` 创建。文件命名规则不变。
 - 文件内容：包含完整的检索结果报告（即下面"严格按以下结构输出"的完整内容），Markdown 格式。
-- **对话中的输出规则**：报告写入 Markdown 文件后，**不要在聊天窗口重复输出完整报告内容**。只需用简短中文告知用户文件保存路径，以及 1-2 句结果概要。除非用户明确要求，否则不粘贴报告正文。
+- **对话中的输出规则**：报告写入 Markdown 文件后，**不要在聊天窗口重复输出完整报告内容**。与用户的交互提示和完成汇报一律用英文（见"标准化使用流程"），包含保存路径与 1-2 句结果概要；除非用户明确要求，否则不粘贴报告正文。
 
 严格按以下结构输出（内容写入 Markdown 文件，不重复贴进聊天）：
 
