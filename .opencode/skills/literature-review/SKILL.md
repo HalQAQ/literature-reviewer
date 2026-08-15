@@ -1,6 +1,6 @@
 ---
 name: literature-review
-description: "生物医学文献检索与综述。当用户要求检索文献、查询论文、写文献综述、总结某主题的研究进展、列出某细胞/分子/疾病的经典实验及其方法、或需要带引用的可信答案时使用。Trigger words: 文献, 论文, 文章, 检索, 综述, PubMed, 引用, literature, paper, article, citation, review, experiments."
+description: "生物医学文献检索与综述。当用户要求检索文献、查询论文、写文献综述、总结某主题的研究进展、列出某细胞/分子/疾病的经典实验及其方法、或需要带引用的可信答案时使用。当用户要求**单篇文献精读**（给出某篇文献的标题/DOI/PMID/或本地文件路径，要求深读、总结、答疑）时使用。Trigger words: 文献, 论文, 文章, 检索, 综述, PubMed, 引用, 精读, 深读, 单篇文献, 单篇论文, literature, paper, article, citation, review, experiments, deep read, close read."
 ---
 
 # 生物医学文献综述工作流
@@ -34,9 +34,9 @@ description: "生物医学文献检索与综述。当用户要求检索文献、
 适用：问题涉及实验方法、具体数值、结论细节等**摘要中不含或不全**的内容（如"列出最经典的使用 X 细胞的实验，各自用了什么方法"）。
 
 1. 先从模式一选出候选 PMID/DOI。
-2. **先查缓存**：检查 `outputs/` 目录是否存在 `<pmid>.txt` 或 `<pmid>_*.txt`。若存在，直接复用缓存，跳过抓取（缓存可被用户清理，勿假设一定存在）。
+2. **先查缓存**：检查 `cache/` 目录是否存在 `<pmid>.txt` 或 `<pmid>_*.txt`。若存在，直接复用缓存，跳过抓取（缓存可被用户清理，勿假设一定存在）。
 3. 缓存缺失时，对每篇候选运行 `python scripts/fulltext.py --pmid <id>` 或 `--doi <doi>`：
-   - 若输出 `OK: ... saved to outputs/xxx.txt`：全文已保存为本地文本，继续。
+   - 若输出 `OK: ... saved to cache/xxx.txt`：全文已保存为本地文本，继续。
    - 若输出 `PAYWALLED:`：文章无开放全文。使用 `hku-browser` MCP 通过 HKU EZproxy 获取（见下）。
 4. 不要下载/保存 PDF 全文到本地，只用文本提取。
 
@@ -62,13 +62,13 @@ description: "生物医学文献检索与综述。当用户要求检索文献、
 正文提取（通用）：
 - 遍历 `main` 内的 `h2/h3/h4/h5/p/figcaption`，跳过 `<20` 字符的节点、用 Set 去重，标题写成 `\n## 标题\n`。
 - **`browser_evaluate` 的返回必须是不带对象的纯字符串**，否则保存到文件的是 JSON。
-- 保存到 `outputs/<pmid>_<source>.txt`。
+- 保存到 `cache/<pmid>_<source>.txt`。
 
 ### RAG 段落抽取（核心：只注入相关片段）
 
 对每篇已获取全文的候选文章：
 
-1. 运行 `python scripts/snippets.py "<用户的具体问题>" outputs/<file>.txt --top K`
+1. 运行 `python scripts/snippets.py "<用户的具体问题>" cache/<file>.txt --top K`
 2. 只把返回的 top-K 相关段落作为该文章的上下文，**不要**把整篇全文塞进上下文。
 3. 将抽取出的段落与对应的 PMID/DOI 绑定，作为回答的事实来源。
 
@@ -80,6 +80,27 @@ description: "生物医学文献检索与综述。当用户要求检索文献、
 - 提取时用 Set 去重，跳过短文本，`h2/h3` 写成 `## 标题` 以配合 `snippets.py` 的章节归属。
 - 若页面显示 HKUL 登录表单（会话过期），提示用户完成一次登录；登录后会话持久化，后续文章免登录。
 
+### 模式三：单篇文献精读（Deep Reading）
+
+适用：用户明确指定**一篇**文献，要求精读全文、做深度总结、回答具体问题（如"精读 PMID 27583450 这篇文章""精读这篇 PDF，回答：他们的结论是什么？"）。**单篇、精读、逐条答疑**是模式三的标志；跨多篇比较仍走模式一/二。
+
+1. **定位文献并获取全文**：
+   - 用户给了 **PMID / DOI / 标题**：运行 `python scripts/paper.py "<标识符>"`。脚本自动识别类型，解析第一作者/杂志/年份，并优先通过 Europe PMC 开放获取拉取全文，输出 `OK: ... saved to cache/<pmid>.txt`。
+   - 用户给了 **本地文件路径**：运行 `python scripts/paper.py --local "<绝对路径>"`。支持 PDF（用 pypdf 提取，若报错先 `pip install pypdf`）与纯文本/`.md`；脚本打印正文开头供识别作者/杂志/年份。
+   - 输出 `PAYWALLED:`：走模式二"HKU EZproxy 全文获取"路径抓正文，保存到 `cache/<pmid>_<source>.txt`。
+   - **先查缓存**：若 `cache/` 已存在对应 `<pmid>.txt`，直接复用，跳过抓取。
+2. **报告文件名（强制）**：`作者 + 杂志名称 + 发表时间`，格式为 `<第一作者姓> et al. - <杂志名> - <年份>.md`（单作者不加 "et al."），例如 `Zhang et al. - PLoS genetics - 2016.md`。`paper.py` 会打印 `REPORT_NAME:` 直接使用；本地文件则从正文头部提取作者/杂志/年份自行构造（缺失时尽力推断，实在无法确定再向用户确认）。
+3. **回答用户的精读问题**：用户精读要求中提出的每个具体问题，用 `python scripts/snippets.py "<问题>" cache/<file>.txt --top 8` 抽取相关段落作为事实来源，逐条回答。
+4. **生成精读报告**：按下面"文献精读报告结构"写入 `reports/<REPORT_NAME>`。对话中只简短告知保存路径与概要，不重复全文。
+5. **持续提问（Follow-up）**：
+   - 报告生成后，用户继续针对**同一篇**文章提问：用 `snippets.py` 在该篇全文上检索，直接在对话回答。
+   - **仅当用户明确要求**（如"加到报告里""补充进报告"）时，将新的 Q&A 追加到报告文件末尾 `## Follow-up Q&A` 小节（按时间顺序追加，编号递增）。
+   - 会话中记住当前精读的全文文件路径与报告文件路径；用户切换到其他文章则更新为新的路径。
+
+### 会话状态（模式三必需）
+
+模式三要求跨消息记忆当前精读对象。在对话中维护并明确标注：当前文章标题、全文文本路径（`cache/xxx.txt`）、报告路径（`reports/xxx.md`）。用户新开一篇精读时更新这些状态。
+
 ## 输出格式
 
 **默认使用英文回答。** 仅当用户明确要求（如"用中文回答"/"answer in Chinese"）时才使用中文。引用标记与格式结构不受语言影响。
@@ -87,7 +108,7 @@ description: "生物医学文献检索与综述。当用户要求检索文献、
 ### 保存为 Markdown 文件（必做）
 
 每次文献检索的完整输出**必须**保存为一个 Markdown 文件：
-- 文件名：以**用户本次检索所给的关键词/主题**命名，如 `DMRT1_in_spermatogenesis.md`（空格和下划线替换），时间戳可选追加。
+- 文件名：以**用户本次检索所给的关键词/主题**命名，如 `DMRT1_in_spermatogenesis.md`（空格和下划线替换），时间戳可选追加。**模式三例外**：单篇精读的报告文件名必须是 `<第一作者> et al. - <杂志名> - <年份>.md`（见"文献精读报告结构"）。
 - 保存位置：工作区根目录下的 `reports/` 文件夹（不存在则创建）。
 - 文件内容：包含完整的检索结果报告（即下面"严格按以下结构输出"的完整内容），Markdown 格式。
 - **对话中的输出规则**：报告写入 Markdown 文件后，**不要在聊天窗口重复输出完整报告内容**。只需用简短中文告知用户文件保存路径，以及 1-2 句结果概要。除非用户明确要求，否则不粘贴报告正文。
@@ -132,9 +153,53 @@ When the question asks to list/compare multiple experiments or studies, use a Ma
 
 The "Experimental Method" for each row must come from its **full text**, never inferred from the abstract only.
 
+### 文献精读报告结构（模式三专用）
+
+文件名为 `<第一作者> et al. - <杂志名> - <年份>.md`，内容按以下结构写入 `reports/`。**引用规则**：文中关键结论必须标注引用 `[[1]](https://doi.org/<doi>)`（n=1 即该文献本身），并可在括号内注明对应原文章节，如 `(Results: "DMRT1 is required for SSC maintenance")`。语言默认英文，用户要求中文时用中文。
+
+```
+# <论文标题>
+
+**<第一作者> et al. | <杂志名> | <年份>** | PMID: xxxx | DOI: <doi>
+
+## One-sentence Takeaway
+一句话概括该文的核心理念。
+
+## Background & Question
+研究背景、要解决的问题、假设。
+
+## Methods Overview
+实验体系（模型/细胞）、主要技术路线、统计方法，均来自全文。
+
+## Key Findings
+按逻辑分小节总结主要结果；每条结论带引用标注和原文章节出处。
+尽量给出具体数值/效应量（如 fold-change、p 值），必须来自全文正文。
+
+## Conclusions & Significance
+作者结论、对该领域/临床的意义。
+
+## Answers to Your Questions
+对用户精读要求中提出的**每个问题逐条回答**，标注依据的原文章节/段落（可引用 snippets.py 抽取的片段）。用户没有提问题时此节省略。
+
+## Limitations & Unverified Claims
+该文的局限、争议点、与其它文献冲突或尚待验证之处。
+
+## Suggested Follow-ups (optional)
+可延伸的研究方向或值得追问的问题。
+
+## References
+[1] First author et al. Year. Title. Journal. PMID:xxxx | [DOI:10.xxxx](https://doi.org/10.xxxx)
+
+## Follow-up Q&A
+（仅当用户要求将后续问答加入报告时追加此节；按时间顺序编号 Q1/A1, Q2/A2 ...）
+Q1: ...
+A1: ... (注明依据的原文章节)
+```
+
 ## 处理常见情况的规则
 
 - **查不到**：明说"未检索到相关文献"，并给出实际执行过的检索词。
+- **单篇精读**：只对用户指定的一篇做深度阅读；报告命名用 `作者 et al. - 杂志 - 年份.md`；回答后续问题不修改已生成的报告，除非用户明确要求追加。
 - **争议话题**：同时列出支持和反对的文献，都标注引用。
 - **用户问得很泛**：先做一次初筛综述，再提示可深入某篇。
 - **引文编号**：正文首次出现的顺序决定编号，不按年份。

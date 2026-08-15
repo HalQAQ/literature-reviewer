@@ -10,8 +10,8 @@ Output: plain-text file saved to <outdir>/<pmid>.txt and prints its path,
 plus a summary of sections. Does NOT download any PDFs.
 
 Usage:
-  python fulltext.py --pmid 24930130 [--outdir outputs]
-  python fulltext.py --doi 10.1038/nmeth.2999 [--outdir outputs]
+  python fulltext.py --pmid 24930130 [--outdir cache]
+  python fulltext.py --doi 10.1038/nmeth.2999 [--outdir cache]
 """
 
 import argparse
@@ -105,7 +105,7 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--pmid")
     ap.add_argument("--doi")
-    ap.add_argument("--outdir", default="outputs")
+    ap.add_argument("--outdir", default="cache")
     args = ap.parse_args()
 
     if not args.pmid and not args.doi:

@@ -1,4 +1,6 @@
 .hku-profile/
-outputs/
+cache/
 node_modules/
 reports/
+__pycache__/
+*.pyc
