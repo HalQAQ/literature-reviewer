@@ -27,7 +27,8 @@ English. Every new search/deep-read task follows this flow:
 
 1. **Start** — two ways:
    - *Entry A*: you say something like "start using literature reviewer" or "start a literature
-     search" (no specific request yet) → the agent introduces the modes below.
+     search" (no specific request yet) → the agent shows a short usage guide and introduces the
+     modes below. The agent **never runs scripts to self-verify** the pipeline.
    - *Entry B*: you directly give keywords plus an explicit request, e.g. "search articles about
      the BMP pathway" or "deep read PMID 27583450" → step 2 is skipped.
 2. **Choose a mode** (only for Entry A): 1) Title + Abstract Quick Search — describe the search

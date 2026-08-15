@@ -14,6 +14,7 @@ description: "生物医学文献检索与综述。当用户要求检索文献、
 3. **只使用检索结果中的信息**。不要用训练记忆里的论文冒充检索结果——除非它被检索工具返回，否则不算数。
 4. **摘要不足以回答时，必须获取全文**（见下）。不得仅凭摘要推测方法细节。
 5. **输出格式固定**，见"输出格式"节，不得自由发挥。
+6. **不得自行运行脚本**。任何检索/全文/精读脚本（`mode1_search.py`、`mode2_full_text.py`、`mode3_deep_read.py`、`snippets.py`）只允许在用户确认方案后（Step 5）执行。用户只是开启会话、询问工具或提出需求时，绝不运行脚本自我验证或提前检索。
 
 ## 标准化使用流程（Standardized Flow）
 
@@ -21,9 +22,29 @@ description: "生物医学文献检索与综述。当用户要求检索文献、
 
 ### Step 1: 开始
 
-- **入口 A（无具体需求）**：用户输入 "start using literature reviewer"、"start a literature search"、"开始文献检索" 等 → 进入 Step 2。
+**重要：收到"开始"类指令时，绝不自行运行任何脚本。** 不得自我验证 pipeline、不得执行 `mode1_search.py` / `mode2_full_text.py` / `mode3_deep_read.py` / `snippets.py` 来"测试工具可用性"。所有脚本只允许在 Step 5、且用户已确认方案后执行。
+
+- **入口 A（无具体需求）**：用户输入 "start using literature reviewer"、"start a literature search"、"开始文献检索" 等 → 先向用户展示一段简短的**使用方式介绍**（英文），然后进入 Step 2。
 - **入口 B（直接带需求）**：用户直接给出关键词和明确要求（如 "search articles about the BMP pathway"、"deep read PMID 27583450"、"精读 XXX 文章"）→ **跳过 Step 2**，从 Step 3 开始。
 - 用户既没给需求也没给模式时，一律按入口 A 处理。
+
+入口 A 展示的使用方式介绍（可在此框架内措辞）：
+
+```
+Welcome to Literature Reviewer! Here's how to use it:
+
+You can start in two ways:
+- Direct request (recommended): just tell me what you need, for example:
+  * "Search articles about the BMP pathway in spermatogenesis"   -> quick search
+  * "Write a detailed report on germline stem cell maintenance"  -> full-text detailed report
+  * "Deep read PMID 27583450" or "Deep read this PDF: <path>"   -> single-paper deep reading
+- Guided start: I'll walk you through the options below and confirm each step.
+
+Reports are saved to <workspace>\reports\ by default; you can specify another
+location at any time (e.g. save into another project).
+```
+
+然后展示三种模式并请用户选择（见 Step 2）。
 
 ### Step 2: 介绍模式并请用户选择（仅入口 A）
 

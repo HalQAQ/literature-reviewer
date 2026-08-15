@@ -1,0 +1,409 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - generic [ref=e3]:
+      - link "Skip to content" [ref=e4] [cursor=pointer]:
+        - /url: "#start-of-content"
+      - banner [ref=e9]:
+        - heading "Navigation Menu" [level=2] [ref=e10]
+        - generic [ref=e11]:
+          - link "Homepage" [ref=e13] [cursor=pointer]:
+            - /url: /
+          - generic [ref=e16]:
+            - navigation "Global" [ref=e17]:
+              - list [ref=e18]:
+                - listitem [ref=e19]:
+                  - button "Platform" [ref=e21] [cursor=pointer]
+                - listitem [ref=e24]:
+                  - button "Solutions" [ref=e26] [cursor=pointer]
+                - listitem [ref=e29]:
+                  - button "Resources" [ref=e31] [cursor=pointer]
+                - listitem [ref=e34]:
+                  - button "Open Source" [ref=e36] [cursor=pointer]
+                - listitem [ref=e39]:
+                  - button "Enterprise" [ref=e41] [cursor=pointer]
+                - listitem [ref=e44]:
+                  - link "Pricing" [ref=e45] [cursor=pointer]:
+                    - /url: https://github.com/pricing
+            - generic [ref=e46]:
+              - button "Search or jump to, type / to search" [ref=e48] [cursor=pointer]:
+                - generic [ref=e51]:
+                  - generic [ref=e52]: Search
+                  - generic [ref=e53]: /
+              - link "Sign in" [ref=e55] [cursor=pointer]:
+                - /url: /login?return_to=https%3A%2F%2Fgithub.com%2FHalQAQ%2Fliterature-reviewer
+              - link "Sign up" [ref=e58] [cursor=pointer]:
+                - /url: /signup?ref_cta=Sign+up&ref_loc=header+logged+out&ref_page=%2F%3Cuser-name%3E%2F%3Crepo-name%3E&source=header-repo&source_repo=HalQAQ%2Fliterature-reviewer
+              - button "Appearance settings" [ref=e61] [cursor=pointer]
+    - main [ref=e68]:
+      - generic [ref=e69]:
+        - generic [ref=e70]:
+          - generic [ref=e72]:
+            - link "HalQAQ" [ref=e76] [cursor=pointer]:
+              - /url: /HalQAQ
+            - generic [ref=e77]: /
+            - strong [ref=e78]:
+              - link "literature-reviewer" [ref=e79] [cursor=pointer]:
+                - /url: /HalQAQ/literature-reviewer
+            - generic [ref=e80]: Public
+          - generic [ref=e81]:
+            - list:
+              - listitem [ref=e82]:
+                - link "You must be signed in to change notification settings" [ref=e83] [cursor=pointer]:
+                  - /url: /login?return_to=%2FHalQAQ%2Fliterature-reviewer
+                  - text: Notifications
+              - listitem [ref=e86]:
+                - link "Fork 0" [ref=e87] [cursor=pointer]:
+                  - /url: /login?return_to=%2FHalQAQ%2Fliterature-reviewer
+                  - text: Fork
+                  - generic "0" [ref=e90]
+              - listitem [ref=e91]:
+                - link "You must be signed in to star a repository" [ref=e93] [cursor=pointer]:
+                  - /url: /login?return_to=%2FHalQAQ%2Fliterature-reviewer
+                  - text: Star
+                  - generic "0 users starred this repository" [ref=e96]: "0"
+        - navigation "Repository" [ref=e97]:
+          - list [ref=e98]:
+            - listitem [ref=e99]:
+              - link "Code" [ref=e100] [cursor=pointer]:
+                - /url: /HalQAQ/literature-reviewer
+            - listitem [ref=e104]:
+              - link "Issues" [ref=e105] [cursor=pointer]:
+                - /url: /HalQAQ/literature-reviewer/issues
+            - listitem [ref=e110]:
+              - link "Pull requests" [ref=e111] [cursor=pointer]:
+                - /url: /HalQAQ/literature-reviewer/pulls
+            - listitem [ref=e115]:
+              - link "Actions" [ref=e116] [cursor=pointer]:
+                - /url: /HalQAQ/literature-reviewer/actions
+            - listitem [ref=e120]:
+              - link "Projects" [ref=e121] [cursor=pointer]:
+                - /url: /HalQAQ/literature-reviewer/projects
+            - listitem [ref=e125]:
+              - link "Security and quality" [ref=e126] [cursor=pointer]:
+                - /url: /HalQAQ/literature-reviewer/security
+            - listitem [ref=e130]:
+              - link "Insights" [ref=e131] [cursor=pointer]:
+                - /url: /HalQAQ/literature-reviewer/pulse
+      - generic [ref=e148]:
+        - generic [ref=e151]:
+          - generic [ref=e152]:
+            - generic [ref=e153]:
+              - button "main branch" [ref=e155] [cursor=pointer]:
+                - generic [ref=e156]: main
+              - generic [ref=e160]:
+                - link "Branches" [ref=e161] [cursor=pointer]:
+                  - /url: /HalQAQ/literature-reviewer/branches
+                - link "Tags" [ref=e164] [cursor=pointer]:
+                  - /url: /HalQAQ/literature-reviewer/tags
+            - button "Code" [ref=e168] [cursor=pointer]
+          - generic [ref=e171]:
+            - generic [ref=e172]:
+              - heading "Folders and files" [level=2] [ref=e173]
+              - table "Folders and files" [ref=e174]:
+                - rowgroup:
+                  - row "Name Last commit message Last commit date":
+                    - columnheader "Name"
+                    - columnheader "Last commit message"
+                    - columnheader "Last commit date"
+                - rowgroup [ref=e175]:
+                  - row [ref=e176]:
+                    - cell "Latest commit History 7 Commits" [ref=e177]:
+                      - generic [ref=e178]:
+                        - heading "Latest commit" [level=2] [ref=e179]
+                        - generic [ref=e182]:
+                          - heading "History" [level=2] [ref=e183]
+                          - link "7 Commits" [ref=e184] [cursor=pointer]:
+                            - /url: /HalQAQ/literature-reviewer/commits/main/
+                  - row ".opencode, (Directory)" [ref=e187]:
+                    - cell [ref=e188]:
+                      - link ".opencode, (Directory)" [ref=e195] [cursor=pointer]:
+                        - /url: /HalQAQ/literature-reviewer/tree/main/.opencode
+                        - text: .opencode
+                    - cell [ref=e196]
+                    - cell [ref=e198]
+                  - row ".playwright-mcp, (Directory)" [ref=e201]:
+                    - cell [ref=e202]:
+                      - link ".playwright-mcp, (Directory)" [ref=e209] [cursor=pointer]:
+                        - /url: /HalQAQ/literature-reviewer/tree/main/.playwright-mcp
+                        - text: .playwright-mcp
+                    - cell [ref=e210]
+                    - cell [ref=e212]
+                  - row "scripts, (Directory)" [ref=e215]:
+                    - cell [ref=e216]:
+                      - link "scripts, (Directory)" [ref=e223] [cursor=pointer]:
+                        - /url: /HalQAQ/literature-reviewer/tree/main/scripts
+                        - text: scripts
+                    - cell [ref=e224]
+                    - cell [ref=e226]
+                  - row ".gitignore, (File)" [ref=e229]:
+                    - cell [ref=e230]:
+                      - link ".gitignore, (File)" [ref=e237] [cursor=pointer]:
+                        - /url: /HalQAQ/literature-reviewer/blob/main/.gitignore
+                        - text: .gitignore
+                    - cell [ref=e238]
+                    - cell [ref=e240]
+                  - row "README.md, (File)" [ref=e243]:
+                    - cell [ref=e244]:
+                      - link "README.md, (File)" [ref=e251] [cursor=pointer]:
+                        - /url: /HalQAQ/literature-reviewer/blob/main/README.md
+                        - text: README.md
+                    - cell [ref=e252]
+                    - cell [ref=e254]
+                  - row "opencode.json, (File)" [ref=e257]:
+                    - cell [ref=e258]:
+                      - link "opencode.json, (File)" [ref=e265] [cursor=pointer]:
+                        - /url: /HalQAQ/literature-reviewer/blob/main/opencode.json
+                        - text: opencode.json
+                    - cell [ref=e266]
+                    - cell [ref=e268]
+                  - row "package-lock.json, (File)" [ref=e271]:
+                    - cell [ref=e272]:
+                      - link "package-lock.json, (File)" [ref=e279] [cursor=pointer]:
+                        - /url: /HalQAQ/literature-reviewer/blob/main/package-lock.json
+                        - text: package-lock.json
+                    - cell [ref=e280]
+                    - cell [ref=e282]
+                  - row "package.json, (File)" [ref=e285]:
+                    - cell [ref=e286]:
+                      - link "package.json, (File)" [ref=e293] [cursor=pointer]:
+                        - /url: /HalQAQ/literature-reviewer/blob/main/package.json
+                        - text: package.json
+                    - cell [ref=e294]
+                    - cell [ref=e296]
+            - generic [ref=e300]:
+              - generic [ref=e301]:
+                - heading "Repository files navigation" [level=2] [ref=e302]
+                - navigation "Repository files" [ref=e303]:
+                  - list [ref=e304]:
+                    - listitem [ref=e305]:
+                      - link "README" [ref=e306] [cursor=pointer]:
+                        - /url: "#"
+                - button "Outline" [ref=e308] [cursor=pointer]
+              - article [ref=e312]:
+                - generic [ref=e313]:
+                  - heading "Literature Reviewer" [level=1] [ref=e314]
+                  - 'link "Permalink: Literature Reviewer" [ref=e315] [cursor=pointer]':
+                    - /url: "#literature-reviewer"
+                - paragraph [ref=e318]:
+                  - text: AI-powered biomedical literature search and review via
+                  - link "OpenCode" [ref=e319] [cursor=pointer]:
+                    - /url: https://opencode.ai
+                  - text: . Searches PubMed, fetches full-text through HKU EZproxy, and generates structured review reports.
+                - generic [ref=e320]:
+                  - heading "Setup" [level=2] [ref=e321]
+                  - 'link "Permalink: Setup" [ref=e322] [cursor=pointer]':
+                    - /url: "#setup"
+                - generic [ref=e325]:
+                  - generic [ref=e326]: npm install
+                  - button "Copy code to clipboard" [ref=e328] [cursor=pointer]
+                - generic [ref=e332]:
+                  - heading "Usage" [level=2] [ref=e333]
+                  - 'link "Permalink: Usage" [ref=e334] [cursor=pointer]':
+                    - /url: "#usage"
+                - paragraph [ref=e337]:
+                  - text: Ask OpenCode to search literature on a topic. The
+                  - code [ref=e338]: literature-review
+                  - text: "skill handles the workflow:"
+                - list [ref=e339]:
+                  - listitem [ref=e340]:
+                    - strong [ref=e341]: Mode 1 (screening)
+                    - text: ":"
+                    - code [ref=e342]: python scripts/mode1_search.py "query||synonyms" --limit 30
+                  - listitem [ref=e343]:
+                    - strong [ref=e344]: Mode 2 (full-text)
+                    - text: ":"
+                    - code [ref=e345]: python scripts/mode2_full_text.py --pmid <id>
+                  - listitem [ref=e346]:
+                    - strong [ref=e347]: RAG extraction
+                    - text: ":"
+                    - code [ref=e348]: python scripts/snippets.py "<question>" cache/<file>.txt --top 5
+                  - listitem [ref=e349]:
+                    - strong [ref=e350]: Mode 3 (single-paper deep reading)
+                    - text: ":"
+                    - code [ref=e351]: python scripts/mode3_deep_read.py "<pmid|doi|title>"
+                    - text: or
+                    - code [ref=e352]: python scripts/mode3_deep_read.py --local "<path>"
+                - paragraph [ref=e353]:
+                  - text: Reports are saved to
+                  - code [ref=e354]: reports/
+                  - text: in Markdown format. Deep-reading reports use the filename
+                  - code [ref=e355]: <First Author> et al. - <Journal> - <Year>.md
+                  - text: (e.g.
+                  - code [ref=e356]: Zhang et al. - PLoS genetics - 2016.md
+                  - text: ).
+                - generic [ref=e357]:
+                  - heading "Standard workflow" [level=2] [ref=e358]
+                  - 'link "Permalink: Standard workflow" [ref=e359] [cursor=pointer]':
+                    - /url: "#standard-workflow"
+                - paragraph [ref=e362]: "The tool can be used through OpenCode or any AI-agent tool. All prompts to the user are in English. Every new search/deep-read task follows this flow:"
+                - list [ref=e363]:
+                  - listitem [ref=e364]:
+                    - strong [ref=e365]: Start
+                    - text: "— two ways:"
+                    - list [ref=e366]:
+                      - listitem [ref=e367]:
+                        - emphasis [ref=e368]: Entry A
+                        - text: ": you say something like \"start using literature reviewer\" or \"start a literature search\" (no specific request yet) → the agent introduces the modes below."
+                      - listitem [ref=e369]:
+                        - emphasis [ref=e370]: Entry B
+                        - text: ": you directly give keywords plus an explicit request, e.g. \"search articles about the BMP pathway\" or \"deep read PMID 27583450\" → step 2 is skipped."
+                  - listitem [ref=e371]:
+                    - strong [ref=e372]: Choose a mode
+                    - text: "(only for Entry A): 1) Title + Abstract Quick Search — describe the search direction; 2) Full-Text Detailed Report — describe the search direction; 3) Single-Paper Deep Reading — provide the article's DOI/PMID/title or the local file path."
+                  - listitem [ref=e373]:
+                    - strong [ref=e374]: Confirm the plan
+                    - text: — the agent restates what it will do (e.g. "Shall I run a quick search using keywords 'XX', 'YY'?") and waits for your final confirmation; you may amend details.
+                  - listitem [ref=e375]:
+                    - strong [ref=e376]: Report location
+                    - text: "— the agent asks where to save the report: default"
+                    - code [ref=e377]: <workspace>\reports\
+                    - text: ", or a custom target path (report is then saved to"
+                    - code [ref=e378]: <target>\paper_reports\
+                    - text: ).
+                  - listitem [ref=e379]:
+                    - strong [ref=e380]: Execute
+                    - text: — the search/deep-reading is performed and the report is generated and saved.
+                  - listitem [ref=e381]:
+                    - strong [ref=e382]: Completion summary
+                    - text: "— the agent reports (in English): number of articles found, how many were deemed useful after screening, how many references the report cites, search duration (the scripts print"
+                    - code [ref=e383]: "ELAPSED: N.Ns"
+                    - text: ), and the full path where the report was saved.
+                - paragraph [ref=e384]: Follow-up questions about an already-generated report do not restart this flow.
+                - generic [ref=e385]:
+                  - heading "Report location" [level=2] [ref=e386]
+                  - 'link "Permalink: Report location" [ref=e387] [cursor=pointer]':
+                    - /url: "#report-location"
+                - list [ref=e390]:
+                  - listitem [ref=e391]:
+                    - text: By default, reports are saved to
+                    - code [ref=e392]: reports/
+                    - text: in this workspace.
+                  - listitem [ref=e393]:
+                    - text: If you ask for reports to be written
+                    - strong [ref=e394]: elsewhere
+                    - text: (e.g. inside another project you are working on), they are saved to
+                    - code [ref=e395]: <target-path>/paper_reports/
+                    - text: . The
+                    - code [ref=e396]: paper_reports
+                    - text: subfolder is created automatically if it does not exist.
+                - generic [ref=e397]:
+                  - 'heading "Mode 3: Single-paper deep reading" [level=2] [ref=e398]'
+                  - 'link "Permalink: Mode 3: Single-paper deep reading" [ref=e399] [cursor=pointer]':
+                    - /url: "#mode-3-single-paper-deep-reading"
+                - paragraph [ref=e402]: Given a single paper (by PMID, DOI, title, or a local PDF/text file), the agent fetches/reads its full text, deep-reads it, and writes a structured report that answers any questions the user asked. After the report is generated you can keep asking questions about the same paper; answers are appended to the report only when you explicitly ask.
+                - generic [ref=e403]:
+                  - generic [ref=e404]:
+                    - text: python scripts/mode3_deep_read.py
+                    - generic [ref=e405]: "\"27583450\""
+                    - generic [ref=e406]: "# by PMID"
+                    - text: python scripts/mode3_deep_read.py
+                    - generic [ref=e407]: "\"10.1371/journal.pgen.1006293\""
+                    - generic [ref=e408]: "# by DOI"
+                    - text: python scripts/mode3_deep_read.py
+                    - generic [ref=e409]: "\"DMRT1 is required for mouse SSC maintenance\""
+                    - generic [ref=e410]: "# by title"
+                    - text: python scripts/mode3_deep_read.py --local
+                    - generic [ref=e411]: "\"C:\\Users\\me\\Downloads\\paper.pdf\""
+                    - generic [ref=e412]: "# local PDF/text"
+                  - button "Copy code to clipboard" [ref=e414] [cursor=pointer]
+                - paragraph [ref=e418]:
+                  - text: Local PDFs require
+                  - code [ref=e419]: pypdf
+                  - text: ":"
+                  - code [ref=e420]: pip install pypdf
+                  - text: .
+                - generic [ref=e421]:
+                  - heading "Cache" [level=2] [ref=e422]
+                  - 'link "Permalink: Cache" [ref=e423] [cursor=pointer]':
+                    - /url: "#cache"
+                - paragraph [ref=e426]:
+                  - text: The
+                  - code [ref=e427]: cache/
+                  - text: folder holds
+                  - strong [ref=e428]: temporary files
+                  - text: "generated while working: fetched full texts ("
+                  - code [ref=e429]: <pmid>.txt
+                  - text: ","
+                  - code [ref=e430]: <pmid>_<source>.txt
+                  - text: ) and intermediate search results. They are git-ignored and safe to delete.
+                - paragraph [ref=e431]:
+                  - text: "Why it exists: before fetching a paper, the agent checks"
+                  - code [ref=e432]: cache/
+                  - text: first and reuses an existing full-text file if present. This
+                  - strong [ref=e433]: speeds up reading papers you have already covered
+                  - text: by skipping the network fetch (and the HKU EZproxy round-trip for paywalled articles).
+                - paragraph [ref=e434]:
+                  - text: Feel free to
+                  - strong [ref=e435]:
+                    - text: clean
+                    - code [ref=e436]: cache/
+                    - text: whenever you want
+                  - text: (e.g.
+                  - code [ref=e437]: Remove-Item cache\*
+                  - text: ) — nothing important lives there. Files will be re-fetched on demand. Note that reports are kept separately in
+                  - code [ref=e438]: reports/
+                  - text: and are not affected by clearing the cache.
+        - generic [ref=e441]:
+          - generic [ref=e442]:
+            - heading "About" [level=2] [ref=e443]
+            - generic [ref=e444]: No description, website, or topics provided.
+            - heading "Resources" [level=3] [ref=e445]
+            - link "Readme" [ref=e447] [cursor=pointer]:
+              - /url: "#readme-ov-file"
+            - link "Activity" [ref=e451] [cursor=pointer]:
+              - /url: /HalQAQ/literature-reviewer/activity
+            - heading "Stars" [level=3] [ref=e454]
+            - generic [ref=e456]:
+              - strong [ref=e459]: "0"
+              - text: stars
+            - heading "Watchers" [level=3] [ref=e460]
+            - generic [ref=e462]:
+              - strong [ref=e465]: "0"
+              - text: watching
+            - heading "Forks" [level=3] [ref=e466]
+            - link [ref=e468] [cursor=pointer]:
+              - /url: /HalQAQ/literature-reviewer/forks
+              - strong [ref=e472]: "0"
+              - text: forks
+            - link "Report repository" [ref=e474] [cursor=pointer]:
+              - /url: /contact/report-content?content_url=https%3A%2F%2Fgithub.com%2FHalQAQ%2Fliterature-reviewer&report=HalQAQ+%28user%29
+          - heading "Releases" [level=2] [ref=e476]
+          - heading "Packages" [level=2] [ref=e480]
+          - heading "Contributors" [level=2] [ref=e483]
+          - heading "Languages" [level=2] [ref=e486]
+    - contentinfo [ref=e489]:
+      - heading "Footer" [level=2] [ref=e490]
+      - generic [ref=e491]:
+        - generic [ref=e492]:
+          - link "GitHub Homepage" [ref=e493] [cursor=pointer]:
+            - /url: https://github.com
+          - generic [ref=e496]: © 2026 GitHub, Inc.
+        - navigation "Footer" [ref=e497]:
+          - heading "Footer navigation" [level=3] [ref=e498]
+          - list "Footer navigation" [ref=e499]:
+            - listitem [ref=e500]:
+              - link "Terms" [ref=e501] [cursor=pointer]:
+                - /url: https://docs.github.com/site-policy/github-terms/github-terms-of-service
+            - listitem [ref=e502]:
+              - link "Privacy" [ref=e503] [cursor=pointer]:
+                - /url: https://docs.github.com/site-policy/privacy-policies/github-privacy-statement
+            - listitem [ref=e504]:
+              - link "Security" [ref=e505] [cursor=pointer]:
+                - /url: https://github.com/security
+            - listitem [ref=e506]:
+              - link "Status" [ref=e507] [cursor=pointer]:
+                - /url: https://www.githubstatus.com/
+            - listitem [ref=e508]:
+              - link "Community" [ref=e509] [cursor=pointer]:
+                - /url: https://github.community/
+            - listitem [ref=e510]:
+              - link "Docs" [ref=e511] [cursor=pointer]:
+                - /url: https://docs.github.com/
+            - listitem [ref=e512]:
+              - link "Contact" [ref=e513] [cursor=pointer]:
+                - /url: https://support.github.com?tags=dotcom-footer
+            - listitem [ref=e514]:
+              - button "Manage cookies" [ref=e516] [cursor=pointer]
+            - listitem [ref=e517]:
+              - button "Do not share my personal information" [ref=e519] [cursor=pointer]
+  - alert [ref=e522]
