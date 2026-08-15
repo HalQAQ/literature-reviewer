@@ -83,3 +83,20 @@ articles).
 Feel free to **clean `cache/` whenever you want** (e.g. `Remove-Item cache\*`) — nothing
 important lives there. Files will be re-fetched on demand. Note that reports are kept
 separately in `reports/` and are not affected by clearing the cache.
+
+## EZproxy auto-login
+
+HKU EZproxy login sessions expire over time. To let the agent log you back in without
+ever seeing your password, the agent uses Chrome's built-in password autofill:
+
+1. **One-time setup**: in the `.hku-profile` Chrome (opened by the `hku-browser` MCP), log in
+   to HKU manually once. When Chrome asks "Save password?", click **Save**.
+2. **On session expiry**, the agent waits for Chrome to autofill the login form, then clicks
+   "Sign in" — it never reads the password field. If autofill does not fire, the agent leaves
+   the password field to you to type in manually.
+3. **Guarantees**: the agent is instructed to never read password input values, never open
+   `chrome://settings/passwords`, and never read/decrypt the `.hku-profile` Login Data files.
+
+Note: because the agent runs on your machine with your privileges, a local agent cannot be
+made *technically* incapable of decrypting stored credentials. The protection here is
+discipline: the agent never handles the password in plaintext.

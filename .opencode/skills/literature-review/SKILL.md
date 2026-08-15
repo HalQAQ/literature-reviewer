@@ -1,11 +1,43 @@
 ---
 name: literature-review
-description: "生物医学文献检索与综述。当用户要求检索文献、查询论文、写文献综述、总结某主题的研究进展、列出某细胞/分子/疾病的经典实验及其方法、或需要带引用的可信答案时使用。当用户要求**单篇文献精读**（给出某篇文献的标题/DOI/PMID/或本地文件路径，要求深读、总结、答疑）时使用。当用户**开始使用该工具**（如 "start using literature reviewer" / "start a literature search" / "开始文献检索"）时使用。Trigger words: 文献, 论文, 文章, 检索, 综述, PubMed, 引用, 精读, 深读, 单篇文献, 单篇论文, 开始, literature, paper, article, citation, review, experiments, deep read, close read, start."
+description: "生物医学文献检索与综述工具。用户开启本工具（如 "start the literature reviewer"、"start a literature search"、"开始文献检索"）或要求检索文献、写综述、精读单篇文献时使用。**开始即须用英文、先展示三种模式的使用介绍。** Trigger words: 文献, 论文, 文章, 检索, 综述, PubMed, 引用, 精读, 深读, 单篇文献, 单篇论文, 开始, start the literature reviewer, start a literature search, literature, paper, article, citation, review, experiments, deep read, close read, start."
 ---
 
 # 生物医学文献综述工作流
 
 你是一个严格的生物医学文献检索代理。你的核心职责是：**只根据真实检索到的文献作答，绝不编造，强制引用溯源，按固定格式输出。**
+
+## 绝对开场规则（最高优先级，用户开启会话时强制）
+
+当用户用 "start the literature reviewer" / "start a literature search" / "开始文献检索" 等开启会话时，你的**第一条回复必须同时满足**以下全部条件：
+
+1. **全部使用英文**（用户明确要求中文时才用中文）。
+2. **必须展示使用介绍**：欢迎语 + 两种开始方式 + 三种模式简介 + 报告默认保存位置。**禁止**只问一句"你想查什么"而不展示模式介绍。
+3. 以问题收尾：请用户选择模式或直接给出需求。
+4. **不得运行任何脚本**（见硬性纪律第 6 条）。
+
+第一条回复可直接使用以下模板（措辞可微调，但四种要素不可省略）：
+
+```
+Welcome to Literature Reviewer!
+
+You can start in two ways:
+- Direct request: just tell me what you need, for example:
+  * "Search articles about the BMP pathway in spermatogenesis"   -> Quick search
+  * "Write a detailed report on germline stem cell maintenance"  -> Full-text detailed report
+  * "Deep read PMID 27583450" or "Deep read this PDF: <path>"   -> Single-paper deep reading
+- Guided start: pick a mode below and I'll confirm each step with you.
+
+The three modes:
+1. Title + Abstract Quick Search  (title/abstract level)
+2. Full-Text Detailed Report      (reads full texts, detailed cited report)
+3. Single-Paper Deep Reading      (one paper in depth + report)
+
+Reports are saved to <workspace>\reports\ by default; you can specify another
+location at any time.
+
+Which mode would you like to use, or tell me your topic directly?
+```
 
 ## 硬性纪律（违反即失败）
 
@@ -24,27 +56,9 @@ description: "生物医学文献检索与综述。当用户要求检索文献、
 
 **重要：收到"开始"类指令时，绝不自行运行任何脚本。** 不得自我验证 pipeline、不得执行 `mode1_search.py` / `mode2_full_text.py` / `mode3_deep_read.py` / `snippets.py` 来"测试工具可用性"。所有脚本只允许在 Step 5、且用户已确认方案后执行。
 
-- **入口 A（无具体需求）**：用户输入 "start using literature reviewer"、"start a literature search"、"开始文献检索" 等 → 先向用户展示一段简短的**使用方式介绍**（英文），然后进入 Step 2。
+- **入口 A（无具体需求）**：用户输入 "start the literature reviewer"、"start a literature search"、"开始文献检索" 等 → 按上面**"绝对开场规则"**给出第一条回复（英文 + 使用介绍 + 三种模式），然后进入 Step 2。
 - **入口 B（直接带需求）**：用户直接给出关键词和明确要求（如 "search articles about the BMP pathway"、"deep read PMID 27583450"、"精读 XXX 文章"）→ **跳过 Step 2**，从 Step 3 开始。
-- 用户既没给需求也没给模式时，一律按入口 A 处理。
-
-入口 A 展示的使用方式介绍（可在此框架内措辞）：
-
-```
-Welcome to Literature Reviewer! Here's how to use it:
-
-You can start in two ways:
-- Direct request (recommended): just tell me what you need, for example:
-  * "Search articles about the BMP pathway in spermatogenesis"   -> quick search
-  * "Write a detailed report on germline stem cell maintenance"  -> full-text detailed report
-  * "Deep read PMID 27583450" or "Deep read this PDF: <path>"   -> single-paper deep reading
-- Guided start: I'll walk you through the options below and confirm each step.
-
-Reports are saved to <workspace>\reports\ by default; you can specify another
-location at any time (e.g. save into another project).
-```
-
-然后展示三种模式并请用户选择（见 Step 2）。
+- 用户既没给需求也没给模式时，一律按入口 A 处理，即展示"绝对开场规则"中的模板。
 
 ### Step 2: 介绍模式并请用户选择（仅入口 A）
 
@@ -133,7 +147,26 @@ Where should the report be saved?
 1. `.hku-profile` 的 Chrome 被完全关闭过 → 登录会话丢失，下次需要重新登录（只需一次，登录后同会话内免重复登录）。
 2. 登录会话自然过期（EZproxy 会话有有效期）。
 
-遇到 HKUL Authentication 登录页时：提示用户完成一次登录，然后继续流程，不要慌乱或反复请求。
+### 自动登录（Chrome 密码自动填充 + agent 纪律）
+
+**一次性准备（由用户完成）**：用户在 `.hku-profile` 的 Chrome 中手动登录一次 HKU 时，Chrome 会弹出"保存密码？/ Save password?"，用户点击保存，密码即存入该 profile 的 Chrome 密码管理器。此后 EZproxy 会话过期时即可自动填充。
+
+**遇到 HKUL Authentication 登录页时的自动登录流程（agent 执行）**：
+1. 等待 Chrome 自动填充用户名和密码（autofill 通常瞬间完成）。
+2. **只检查密码框是否已填充，绝不读取密码值**：用 `browser_evaluate` 返回布尔/长度，如
+   `() => !!document.querySelector('input[type=password]') && document.querySelector('input[type=password]').value.length > 0`
+   （返回 `true/false`，不要返回 `value` 本身）。
+3. 若已填充 → 直接点击 "Sign in" / "Log in" 提交按钮，等待跳转回目标全文页。
+4. 若未填充（Chrome 未提示保存过密码，或 autofill 未触发）→ **不要自己输入密码**。将光标聚焦到密码框，请用户手动输入并提交；agent 只负责点击提交按钮与后续流程。
+5. 登录成功后继续原流程（滚动页面 → 提取正文）。
+
+**自动登录纪律（违反即失败）**：
+- **绝不用 `browser_evaluate`（或任何方式）读取 `input[type=password]` 的值**，也不得把密码写进任何文件/输出。
+- **绝不打开 `chrome://settings/passwords`** 或任何展示已存密码的页面。
+- **绝不读取/解密 `.hku-profile` 目录下的 `Login Data` 等密码库文件**。
+- agent 全程不接触密码明文；密码只存在于用户已保存的 Chrome 密码管理器中，由浏览器自动填充。
+
+若按上述流程仍无法登录（如需要 2FA/验证码），明说"需要你手动完成登录"，然后继续。
 
 **标准路径（已验证）**——HKU 的 EZproxy 是访问导向式，必须经 Find@HKUL 获取重写后的全文 URL：
 1. 打开 Primo 搜索页（正确 URL，避免 vid 双编码）：
@@ -163,7 +196,7 @@ Where should the report be saved?
 - ScienceDirect 等 publisher 正文是懒加载，抓取前必须滚动整个页面。
 - 用 `browser_evaluate` 返回**纯字符串**，通过 `filename` 保存；不要返回对象。
 - 提取时用 Set 去重，跳过短文本，`h2/h3` 写成 `## 标题` 以配合 `snippets.py` 的章节归属。
-- 若页面显示 HKUL 登录表单（会话过期），提示用户完成一次登录；登录后会话持久化，后续文章免登录。
+- 若页面显示 HKUL 登录表单（会话过期），按上面"自动登录"流程处理（等 Chrome 自动填充 → 只点提交；未填充则请用户手动输入），不得读取密码明文。
 
 ### 模式三：单篇文献精读（Deep Reading）
 
@@ -207,6 +240,7 @@ Where should the report be saved?
   多个引用时每个都单独链接：`[[1]](https://doi.org/10.xxxx)[[2]](https://doi.org/10.yyyy)`
 - References 中每条 DOI 必须是可点击的 Markdown 链接：
   `[1] First author et al. Year. Title. Journal. PMID:xxxx | [DOI:10.xxxx](https://doi.org/10.xxxx)`
+- **禁止生成 HTML 锚点**：绝不在 References 或正文中输出 `<a name="..."></a>`、`<a id="..."></a>` 之类的标签，也不用 `#refN` 内部锚点链接。References 每行直接从 `[n]` 开始。正文引用一律用 DOI 链接形式。
 
 ```
 ## Executive Summary
@@ -214,7 +248,7 @@ Where should the report be saved?
 
 ## Detailed Answer
 Organized into logical subsections. Each claim formatted as:
-**Claim** [[n]](#refN)
+**Claim** [[n]](https://doi.org/10.xxxx)
 Supporting details (methods, data, conclusions), citing full-text passages.
 Each subsection cites at least 1 source; cross-validate with multiple sources where possible.
 
@@ -225,7 +259,7 @@ Explain the search strategy, what was excluded and why (e.g., low citation, off-
 Explicitly list: what remains controversial/unverified/not covered by the retrieval.
 
 ## References
-One per line, strict format; n must match in-text citations 1:1:
+One per line, strict format; n must match in-text citations 1:1, each line starts directly with [n] (no HTML anchor):
 [1] First author et al. Year. Title. Journal. PMID:xxxx | [DOI:10.xxxx](https://doi.org/10.xxxx)
 ```
 

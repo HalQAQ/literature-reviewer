@@ -1,4 +1,5 @@
 .hku-profile/
+.playwright-mcp/
 cache/
 node_modules/
 reports/
