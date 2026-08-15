@@ -124,6 +124,9 @@ Where should the report be saved?
    - 必须包含**多个角度的同义词/上位词**，避免单查询漏检。例如主题 DMRT1 生精，用 `"DMRT1 spermatogenesis||DMRT1 male germ cell||DMRT1 human germline commitment||DMRT1 testis development"`。
    - 单一窄词可能漏掉权威文章（如讲 germline commitment 而非 spermatogenesis 的论文），多查询合并才能覆盖。
 2. 运行 `python scripts/mode1_search.py "query1||query2||..." --limit N`（N 默认 30，保证合并后 ≥10 篇）。
+   - **默认只搜索 research paper，排除 review**：脚本默认 `--reviews exclude`（排除 review / systematic review / meta-analysis）。**除非用户明确要求**（如"包含综述""也搜 review"→ `--reviews include`；"只要综述""只搜 review"→ `--reviews only`），一律用默认的 exclude，不要自己把综述加回来。
+   - 该过滤针对**检索结果的文献类型**，与报告形式无关：即使用户要"写一篇综述报告"，默认来源仍是 research papers；只有用户明确要求以综述/仅综述作为来源时才改变。
+   - 在 Step 3 复述检索方案时，明确告知用户本次采用的综述过滤策略（默认：research papers only）。
 3. **若合并结果少于 10 篇**：添加更宽泛的检索词（上位概念、相关疾病/模型）重跑，直到 ≥10 篇。
 4. 阅读输出，按 rank_score（引用数为主要权重）评估，选出最相关的前 5-10 篇作为核心候选，其余留作背景。
 5. 记录每篇的 PMID/DOI 供后续引用。

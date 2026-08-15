@@ -13,6 +13,8 @@ npm install
 Ask OpenCode to search literature on a topic. The `literature-review` skill handles the workflow:
 
 - **Mode 1 (screening)**: `python scripts/mode1_search.py "query||synonyms" --limit 30`
+  By default only **research papers** are returned (reviews/systematic reviews/meta-analyses are
+  excluded). Use `--reviews include` to include reviews, or `--reviews only` for review-only results.
 - **Mode 2 (full-text)**: `python scripts/mode2_full_text.py --pmid <id>`
 - **RAG extraction**: `python scripts/snippets.py "<question>" cache/<file>.txt --top 5`
 - **Mode 3 (single-paper deep reading)**: `python scripts/mode3_deep_read.py "<pmid|doi|title>"` or `python scripts/mode3_deep_read.py --local "<path>"`

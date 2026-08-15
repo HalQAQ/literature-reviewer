@@ -9,8 +9,14 @@ Multiple queries are supported: separate them with '||' (e.g. "DMRT1
 spermatogenesis||DMRT1 germline commitment"). Results from all queries are
 merged and deduplicated. By default at least 10 results are targeted.
 
+By default reviews/systematic reviews/meta-analyses are EXCLUDED (research
+papers only). Use --reviews to change:
+  --reviews exclude  research papers only (default)
+  --reviews include  include reviews as well
+  --reviews only     only reviews/systematic reviews/meta-analyses
+
 Usage:
-  python mode1_search.py "<query>" [--limit N] [--json] [--output FILE]
+  python mode1_search.py "<query>" [--limit N] [--reviews exclude|include|only] [--json] [--output FILE]
   python mode1_search.py "A||B||C" --limit 30 --output results.txt
 """
 
@@ -37,6 +43,22 @@ S2 = "https://api.semanticscholar.org/graph/v1/paper/search"
 S2_HEADERS = {"User-Agent": "opencode-literature-review/0.1"}
 DEFAULT_LIMIT = 30
 
+# Secondary literature types excluded by default (--reviews exclude).
+SECONDARY_TYPES = {"review", "systematic review", "meta-analysis"}
+REVIEW_PUBMED = {
+    "exclude": "NOT (review[pt] OR systematicreview[pt] OR meta-analysis[pt])",
+    "only": "(review[pt] OR systematicreview[pt] OR meta-analysis[pt])",
+}
+REVIEW_EPMC = {
+    "exclude": 'NOT (PUB_TYPE:"Review" OR PUB_TYPE:"Systematic Review" OR PUB_TYPE:"Meta-Analysis")',
+    "only": '(PUB_TYPE:"Review" OR PUB_TYPE:"Systematic Review" OR PUB_TYPE:"Meta-Analysis")',
+}
+
+
+def _is_secondary(types):
+    """types: lowercased publication type strings -> True if a review-type."""
+    return any(any(s in t for s in ("review", "meta-analysis", "metaanalysis")) for t in types)
+
 
 def norm_title(t):
     return re.sub(r"[^a-z0-9]+", "", (t or "").lower())
@@ -48,10 +70,13 @@ def fetch(url, params=None, headers=None, timeout=30):
     return r
 
 
-def search_pubmed(query, limit):
+def search_pubmed(query, limit, reviews="exclude"):
     """PubMed E-utilities: esearch -> esummary (with abstract via efetch)."""
+    term = query
+    if reviews in REVIEW_PUBMED:
+        term = f"{query} AND {REVIEW_PUBMED[reviews]}"
     ids = fetch(BASE + "/esearch.fcgi", {
-        "db": "pubmed", "term": query, "retmax": limit,
+        "db": "pubmed", "term": term, "retmax": limit,
         "retmode": "json", "sort": "relevance",
     }).json().get("esearchresult", {}).get("idlist", [])
     if not ids:
@@ -111,13 +136,22 @@ def _pubmed_citations(pmid):
         return 0
 
 
-def search_epmc(query, limit):
+def search_epmc(query, limit, reviews="exclude"):
     """Europe PMC REST search with abstracts."""
+    q = query
+    if reviews in REVIEW_EPMC:
+        q = f"{query} AND {REVIEW_EPMC[reviews]}"
     data = fetch(EPMC + "/search", {
-        "query": query, "resultType": "core", "pageSize": limit, "format": "json",
+        "query": q, "resultType": "core", "pageSize": limit, "format": "json",
     }).json()
     out = []
     for it in data.get("resultList", {}).get("result", []):
+        pt = [str(p.get("type", "")).lower()
+              for p in (it.get("pubTypeList", {}).get("pubType") or [])]
+        if reviews == "exclude" and _is_secondary(pt):
+            continue
+        if reviews == "only" and not _is_secondary(pt):
+            continue
         out.append({
             "source": "EuropePMC",
             "title": clean_text(it.get("title", "")),
@@ -132,12 +166,12 @@ def search_epmc(query, limit):
     return out
 
 
-def search_s2(query, limit):
+def search_s2(query, limit, reviews="exclude"):
     """Semantic Scholar search (fields: title, abstract, authors, journal,
-    year, externalIds, citationCount)."""
+    year, externalIds, citationCount, publicationTypes)."""
     params = {
         "query": query, "limit": min(limit, 100),
-        "fields": "title,abstract,authors,journal,year,externalIds,citationCount",
+        "fields": "title,abstract,authors,journal,year,externalIds,citationCount,publicationTypes",
     }
     try:
         data = fetch(S2, params, headers=S2_HEADERS, timeout=30).json()
@@ -145,6 +179,11 @@ def search_s2(query, limit):
         return []
     out = []
     for it in data.get("data", []):
+        pt = [str(t).lower() for t in (it.get("publicationTypes") or [])]
+        if reviews == "exclude" and _is_secondary(pt):
+            continue
+        if reviews == "only" and not _is_secondary(pt):
+            continue
         ex = it.get("externalIds") or {}
         out.append({
             "source": "SemanticScholar",
@@ -203,6 +242,10 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("query")
     ap.add_argument("--limit", type=int, default=DEFAULT_LIMIT)
+    ap.add_argument("--reviews", choices=["exclude", "include", "only"],
+                    default="exclude",
+                    help="Publication-type filter: exclude reviews (default, "
+                         "research papers only), include reviews, or only reviews")
     ap.add_argument("--json", action="store_true")
     ap.add_argument("--output", "-o", default=None,
                     help="Write output to file (UTF-8 with BOM) instead of stdout")
@@ -217,7 +260,7 @@ def main():
     for q in queries:
         for fn in (search_pubmed, search_epmc, search_s2):
             try:
-                results.extend(fn(q, per_query))
+                results.extend(fn(q, per_query, args.reviews))
                 time.sleep(0.5)
             except Exception as e:
                 print(f"[warn] {fn.__name__} failed for {q!r}: {e}", file=sys.stderr)
@@ -237,7 +280,8 @@ def main():
         return
 
     lines = []
-    lines.append(f"# Found {len(merged)} unique articles for: {args.query}\n")
+    lines.append(f"# Found {len(merged)} unique articles for: {args.query}")
+    lines.append(f"REVIEW_FILTER: {args.reviews}\n")
     for i, rec in enumerate(merged, 1):
         lines.append(f"[{i}] {rec['title']}")
         lines.append(f"    Journal: {rec.get('journal') or 'N/A'} ({rec.get('year') or 'N/A'})")
