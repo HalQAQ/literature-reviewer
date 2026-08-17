@@ -167,6 +167,12 @@ Where should the report be saved?
 
 登录会话持久保存在 `.hku-profile`，登录后一段时间内打开付费文章无需再次登录；仅当会话自然过期时才需用户再手动登录一次。
 
+**会话过期清理（用户要求，务必记住）**：每次因会话过期而重新登录后，必须清理 `.hku-profile` 下已无用的旧文件以节省空间，**不只清理 snapshots**：
+1. 旧会话/标签快照：`.hku-profile\Default\Sessions\Session_*`、`Tabs_*` 中非当前的旧文件。
+2. 已过期的登录/注册信息类文件：如旧 `Login Data*`、`Cookies*` 残留、`Network\*` 中的过期会话状态等（当前正在使用的活动会话文件不要动，避免破坏当前登录）。
+3. 其它无用文件：`*.journal`（SQLite 残留日志）、`LOG.old`（LevelDB 旧日志）、可再生成的缓存目录（`Code Cache`、`GPUCache`、`GrShaderCache`、`ShaderCache`、`Dawn*Cache`、`JumpListIcons*`、`AutofillAiModelCache` 等）。
+4. 删除文件时逐个捕获异常（浏览器正占用的文件会删除失败，跳过即可），并汇报释放的空间量。
+
 **标准路径（已验证）**——HKU 的 EZproxy 是访问导向式，必须经 Find@HKUL 获取重写后的全文 URL：
 1. 打开 Primo 搜索页（正确 URL，避免 vid 双编码）：
    `https://julac-hku.primo.exlibrisgroup.com/discovery/search?vid=852JULAC_HKU:HKU&query=any,contains,<标题>`
