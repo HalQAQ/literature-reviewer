@@ -64,10 +64,18 @@ def norm_title(t):
     return re.sub(r"[^a-z0-9]+", "", (t or "").lower())
 
 
-def fetch(url, params=None, headers=None, timeout=30):
-    r = requests.get(url, params=params, headers=headers, timeout=timeout)
-    r.raise_for_status()
-    return r
+def fetch(url, params=None, headers=None, timeout=30, retries=5):
+    for attempt in range(retries):
+        try:
+            r = requests.get(url, params=params, headers=headers, timeout=timeout)
+            if r.status_code in (429, 500, 502, 503, 504):
+                raise requests.exceptions.HTTPError(r.status_code)
+            r.raise_for_status()
+            return r
+        except requests.exceptions.RequestException as e:
+            if attempt == retries - 1:
+                raise
+            time.sleep(1.5 * (attempt + 1))
 
 
 def search_pubmed(query, limit, reviews="exclude"):
@@ -81,10 +89,12 @@ def search_pubmed(query, limit, reviews="exclude"):
     }).json().get("esearchresult", {}).get("idlist", [])
     if not ids:
         return []
+    time.sleep(0.7)
     joined = ",".join(ids)
     summ = fetch(BASE + "/esummary.fcgi", {
         "db": "pubmed", "id": joined, "retmode": "json",
     }).json().get("result", {})
+    time.sleep(0.7)
     abstr = fetch(BASE + "/efetch.fcgi", {
         "db": "pubmed", "id": joined, "rettype": "abstract", "retmode": "text",
     }).text
@@ -146,8 +156,18 @@ def search_epmc(query, limit, reviews="exclude"):
     }).json()
     out = []
     for it in data.get("resultList", {}).get("result", []):
-        pt = [str(p.get("type", "")).lower()
-              for p in (it.get("pubTypeList", {}).get("pubType") or [])]
+        ptypes = it.get("pubTypeList", {})
+        pt_entry = ptypes.get("pubType") or [] if isinstance(ptypes, dict) else ptypes or []
+        if isinstance(pt_entry, dict):
+            pt_entry = [pt_entry]
+        elif isinstance(pt_entry, str):
+            pt_entry = [pt_entry]
+        pt = []
+        for p in pt_entry:
+            if isinstance(p, dict):
+                pt.append(str(p.get("type", "")).lower())
+            else:
+                pt.append(str(p).lower())
         if reviews == "exclude" and _is_secondary(pt):
             continue
         if reviews == "only" and not _is_secondary(pt):
