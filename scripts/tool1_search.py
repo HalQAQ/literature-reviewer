@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""mode1_search.py - Mode 1 literature screening.
+"""tool1_search.py - Tool 1 literature screening.
 
 Queries PubMed, Europe PMC and Semantic Scholar, merges by PMID/DOI, and
 prints a ranked, deduplicated list of articles (title/abstract/authors/
@@ -16,8 +16,8 @@ papers only). Use --reviews to change:
   --reviews only     only reviews/systematic reviews/meta-analyses
 
 Usage:
-  python mode1_search.py "<query>" [--limit N] [--reviews exclude|include|only] [--json] [--output FILE]
-  python mode1_search.py "A||B||C" --limit 30 --output results.txt
+  python tool1_search.py "<query>" [--limit N] [--reviews exclude|include|only] [--json] [--output FILE]
+  python tool1_search.py "A||B||C" --limit 30 --output results.txt
 """
 
 import argparse

@@ -5,3 +5,6 @@ node_modules/
 reports/
 __pycache__/
 *.pyc
+web-access-profile/
+.opencode/skills/web-access/config.env
+.opencode/skills/web-access/references/site-patterns/*.md

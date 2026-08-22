@@ -12,12 +12,12 @@ npm install
 
 Ask OpenCode to search literature on a topic. The `literature-review` skill handles the workflow:
 
-- **Mode 1 (screening)**: `python scripts/mode1_search.py "query||synonyms" --limit 30`
+- **Tool 1 (screening)**: `python scripts/tool1_search.py "query||synonyms" --limit 30`
   By default only **research papers** are returned (reviews/systematic reviews/meta-analyses are
   excluded). Use `--reviews include` to include reviews, or `--reviews only` for review-only results.
-- **Mode 2 (full-text)**: `python scripts/mode2_full_text.py --pmid <id>`
+- **Tool 2 (full-text)**: `python scripts/tool2_full_text.py --pmid <id>`
 - **RAG extraction**: `python scripts/snippets.py "<question>" cache/<file>.txt --top 5`
-- **Mode 3 (single-paper deep reading)**: `python scripts/mode3_deep_read.py "<pmid|doi|title>"` or `python scripts/mode3_deep_read.py --local "<path>"`
+- **Tool 3 (single-paper deep reading)**: `python scripts/tool3_deep_read.py "<pmid|doi|title>"` or `python scripts/tool3_deep_read.py --local "<path>"`
 
 Reports are saved to `reports/` in Markdown format. Deep-reading reports use the filename
 `<First Author> et al. - <Journal> - <Year>.md` (e.g. `Zhang et al. - PLoS genetics - 2016.md`).
@@ -63,10 +63,10 @@ asking questions about the same paper; answers are appended to the report only
 when you explicitly ask.
 
 ```bash
-python scripts/mode3_deep_read.py "27583450"                                   # by PMID
-python scripts/mode3_deep_read.py "10.1371/journal.pgen.1006293"               # by DOI
-python scripts/mode3_deep_read.py "DMRT1 is required for mouse SSC maintenance" # by title
-python scripts/mode3_deep_read.py --local "C:\Users\me\Downloads\paper.pdf"     # local PDF/text
+python scripts/tool3_deep_read.py "27583450"                                   # by PMID
+python scripts/tool3_deep_read.py "10.1371/journal.pgen.1006293"               # by DOI
+python scripts/tool3_deep_read.py "DMRT1 is required for mouse SSC maintenance" # by title
+python scripts/tool3_deep_read.py --local "C:\Users\me\Downloads\paper.pdf"     # local PDF/text
 ```
 
 Local PDFs require `pypdf`: `pip install pypdf`.
@@ -98,3 +98,38 @@ Different institutions use different login methods (portal UID + PIN, SSO, 2FA, 
 The agent cannot operate your browser's native password manager or your SSO provider by
 default, but you can work with the agent to customize a login flow that fits your own
 institution.
+
+## Browser channel: web-access (dedicated isolated profile)
+
+For paywalled full-text retrieval the agent uses the bundled **web-access** skill
+(`.opencode/skills/web-access`), which drives a **dedicated, isolated Chrome instance**
+(`web-access-profile/`) via CDP. The skill was adapted for this project:
+
+- **Privacy (hard requirement)**: the skill's browser discovery was patched so the agent can
+  only ever connect to the dedicated profile — your everyday Chrome/Edge is **physically
+  undiscoverable**. The agent never reads your browser history/bookmarks/passwords, and only
+  operates in tabs it creates itself (closing them afterwards). `find-url` (bookmark/history
+  search) is likewise restricted to the dedicated profile and effectively disabled.
+- **Windows/PowerShell**: all `curl` calls use `curl.exe`; skill paths use relative
+  `.opencode/skills/web-access`.
+- **Site experience**: after each successful fetch, the agent may record verified patterns
+  (lazy-loading behavior, PDF streams, login redirects) in
+  `.opencode/skills/web-access/references/site-patterns/<domain>.md`, reused across sessions.
+
+**One-time setup**:
+1. Run `powershell -ExecutionPolicy Bypass -File scripts\start-web-access-profile.ps1`
+   to start the isolated Chrome (remote debugging on port 9222).
+2. In that window, log in to your library/EZproxy once. The session persists there.
+
+**Keep the dedicated window open** while the agent needs browser access. If it is not
+running, the agent will ask you to start it, then falls back to the `hku-browser` MCP
+(`.hku-profile`) with manual login.
+
+## Parallel full-text fetching
+
+When Mode 2 needs full texts for **multiple paywalled articles**, the agent fetches them in
+**parallel using sub-agents** (shared CDP proxy + per-tab isolation, no race conditions).
+Each sub-agent loads the web-access skill, opens its own background tab, extracts the body,
+saves it to `cache/<pmid>_<source>.txt`, and closes the tab. The main agent then aggregates
+results and continues with RAG extraction and report writing. If the dedicated instance is
+unavailable, fetching degrades to the serial `hku-browser` path.

@@ -46,7 +46,7 @@ Which mode would you like to use, or tell me your topic directly?
 3. **只使用检索结果中的信息**。不要用训练记忆里的论文冒充检索结果——除非它被检索工具返回，否则不算数。
 4. **摘要不足以回答时，必须获取全文**（见下）。不得仅凭摘要推测方法细节。
 5. **输出格式固定**，见"输出格式"节，不得自由发挥。
-6. **不得自行运行脚本**。任何检索/全文/精读脚本（`mode1_search.py`、`mode2_full_text.py`、`mode3_deep_read.py`、`snippets.py`）只允许在用户确认方案后（Step 5）执行。用户只是开启会话、询问工具或提出需求时，绝不运行脚本自我验证或提前检索。
+6. **不得自行运行脚本**。任何检索/全文/精读脚本（`tool1_search.py`、`tool2_full_text.py`、`tool3_deep_read.py`、`snippets.py`）只允许在用户确认方案后（Step 5）执行。用户只是开启会话、询问工具或提出需求时，绝不运行脚本自我验证或提前检索。
 
 ## 标准化使用流程（Standardized Flow）
 
@@ -54,7 +54,7 @@ Which mode would you like to use, or tell me your topic directly?
 
 ### Step 1: 开始
 
-**重要：收到"开始"类指令时，绝不自行运行任何脚本。** 不得自我验证 pipeline、不得执行 `mode1_search.py` / `mode2_full_text.py` / `mode3_deep_read.py` / `snippets.py` 来"测试工具可用性"。所有脚本只允许在 Step 5、且用户已确认方案后执行。
+**重要：收到"开始"类指令时，绝不自行运行任何脚本。** 不得自我验证 pipeline、不得执行 `tool1_search.py` / `tool2_full_text.py` / `tool3_deep_read.py` / `snippets.py` 来"测试工具可用性"。所有脚本只允许在 Step 5、且用户已确认方案后执行。
 
 - **入口 A（无具体需求）**：用户输入 "start the literature reviewer"、"start a literature search"、"开始文献检索" 等 → 按上面**"绝对开场规则"**给出第一条回复（英文 + 使用介绍 + 三种模式），然后进入 Step 2。
 - **入口 B（直接带需求）**：用户直接给出关键词和明确要求（如 "search articles about the BMP pathway"、"deep read PMID 27583450"、"精读 XXX 文章"）→ **跳过 Step 2**，从 Step 3 开始。
@@ -85,8 +85,8 @@ Which mode would you like to use?
 ### Step 3: 确认方案（入口 B 也从这里开始）
 
 将待执行方案复述给用户并请求确认。英文示例：
-- 模式一/二：`Shall I run a quick search using keywords 'XX', 'YY'?` / `Shall I fetch full texts and generate a detailed report on 'XX'?`
-- 模式三：`Shall I deep-read 'XXX' and generate a report?`
+- 工具一/二：`Shall I run a quick search using keywords 'XX', 'YY'?` / `Shall I fetch full texts and generate a detailed report on 'XX'?`
+- 工具三：`Shall I deep-read 'XXX' and generate a report?`
 
 用户可修改或补充信息（如更换关键词、指定文章），**必须等用户最终确认后再执行**。
 
@@ -103,7 +103,7 @@ Where should the report be saved?
 
 ### Step 5: 执行
 
-按用户确认的模式执行检索/精读，生成并保存报告（模式一/二输出综述报告，模式三输出精读报告）。
+按用户确认的模式执行检索/精读，生成并保存报告（工具一/二输出综述报告，工具三输出精读报告）。
 
 ### Step 6: 完成汇报（英文）
 
@@ -116,14 +116,14 @@ Where should the report be saved?
 
 ## 检索工作流
 
-### 模式一：初筛（免费 API，无需 HKU 权限）
+### 工具一：初筛（免费 API，无需 HKU 权限）
 
 适用：需要找哪些文章、它们的大致内容（标题+摘要可回答时）。
 
 1. 将用户问题转化为 **3-5 条检索 query**（英文）。要点：
    - 必须包含**多个角度的同义词/上位词**，避免单查询漏检。例如主题 DMRT1 生精，用 `"DMRT1 spermatogenesis||DMRT1 male germ cell||DMRT1 human germline commitment||DMRT1 testis development"`。
    - 单一窄词可能漏掉权威文章（如讲 germline commitment 而非 spermatogenesis 的论文），多查询合并才能覆盖。
-2. 运行 `python scripts/mode1_search.py "query1||query2||..." --limit N`（N 默认 30，保证合并后 ≥10 篇）。
+2. 运行 `python scripts/tool1_search.py "query1||query2||..." --limit N`（N 默认 30，保证合并后 ≥10 篇）。
    - **默认只搜索 research paper，排除 review**：脚本默认 `--reviews exclude`（排除 review / systematic review / meta-analysis）。**除非用户明确要求**（如"包含综述""也搜 review"→ `--reviews include`；"只要综述""只搜 review"→ `--reviews only`），一律用默认的 exclude，不要自己把综述加回来。
    - 该过滤针对**检索结果的文献类型**，与报告形式无关：即使用户要"写一篇综述报告"，默认来源仍是 research papers；只有用户明确要求以综述/仅综述作为来源时才改变。
    - 在 Step 3 复述检索方案时，明确告知用户本次采用的综述过滤策略（默认：research papers only）。
@@ -131,19 +131,60 @@ Where should the report be saved?
 4. 阅读输出，按 rank_score（引用数为主要权重）评估，选出最相关的前 5-10 篇作为核心候选，其余留作背景。
 5. 记录每篇的 PMID/DOI 供后续引用。
 
-### 模式二：全文获取（HKU EZproxy 权限 + 开放获取兜底）
+### 工具二：全文获取（HKU EZproxy 权限 + 开放获取兜底）
 
 适用：问题涉及实验方法、具体数值、结论细节等**摘要中不含或不全**的内容（如"列出最经典的使用 X 细胞的实验，各自用了什么方法"）。
 
-1. 先从模式一选出候选 PMID/DOI。
+1. 先从工具一选出候选 PMID/DOI。
 2. **先查缓存**：检查 `cache/` 目录是否存在 `<pmid>.txt` 或 `<pmid>_*.txt`。若存在，直接复用缓存，跳过抓取（缓存可被用户清理，勿假设一定存在）。
-3. 缓存缺失时，对每篇候选运行 `python scripts/mode2_full_text.py --pmid <id>` 或 `--doi <doi>`：
+3. 缓存缺失时，对每篇候选运行 `python scripts/tool2_full_text.py --pmid <id>` 或 `--doi <doi>`：
    - 若输出 `OK: ... saved to cache/xxx.txt`：全文已保存为本地文本，继续。
-   - 若输出 `PAYWALLED:`：文章无开放全文。使用 `hku-browser` MCP 通过 HKU EZproxy 获取（见下）。
+   - 若输出 `PAYWALLED:`：文章无开放全文。**优先用 web-access 通道**连专用隔离实例抓取（见"浏览器全文获取：优先走 web-access"）；不可用时回退 `hku-browser` MCP 通过 HKU EZproxy 获取。
 4. **全文提取优先用网页文本，PDF 下载是兜底（不是首选）**。默认路径仍是：在网页上滚动 + `browser_evaluate` 提取纯文本保存为 `cache/<pmid>_<source>.txt`。**仅当网页文本提取困难/不完整时**（如 EBSCO PDF viewer 的 text layer 乱序或缺失、正文为图片型 PDF 等），才回退到把 PDF 保存到本地再离线提取文本。PDF 兜底流程见下文"PDF 兜底提取（EBSCO 等 PDF viewer）"。
    - 保存的 PDF 放在 `cache/<pmid>.pdf`（或 `cache/<pmid>_<source>.pdf`），提取出的文本仍放 `cache/<pmid>_<source>.txt`，以便 `snippets.py` 正常使用。
 
-### HKU EZproxy 全文获取（模式二核心路径）
+### 浏览器全文获取：优先走 web-access（专用隔离实例）【隐私硬性要求】
+
+**通道优先级**：抓付费全文时，**优先**使用 `web-access` skill 的 CDP 通道连接专用隔离浏览器实例 `web-access-profile/`；`hku-browser` MCP + 手动登录（见下）仅作回退。
+
+**前置**：专用实例需已运行（用户执行 `scripts/start-web-access-profile.ps1` 启动，并已在该窗口登录过 HKU，会话持久保存在该实例）。启动流程：
+```
+node .opencode/skills/web-access/scripts/check-deps.mjs
+```
+输出 `proxy: ready` 后即可用 `curl.exe -s` 调用 `http://localhost:3456` 的 API。
+
+**抓正文流程**（沿用 web-access 的 `/new → /scroll → /eval → /close`）：
+1. 经 Primo 拿到重写后的全文 URL（标准路径见下）。
+2. `curl.exe -s -X POST --data-raw '<全文URL>' http://localhost:3456/new` → 得到 `targetId`。
+3. `curl.exe -s "http://localhost:3456/scroll?target=<ID>&direction=bottom"`（触发懒加载）。
+4. `curl.exe -s -X POST "http://localhost:3456/eval?target=<ID>" -d '<提取正文的 JS，返回纯字符串>'`（遍历 main 内 h2/h3/p/figcaption，Set 去重，标题写成 `## 标题`，返回字符串）。
+5. 将返回的纯字符串保存到 `cache/<pmid>_<source>.txt`。
+6. `curl.exe -s "http://localhost:3456/close?target=<ID>"` 关闭自己创建的 tab。
+
+**隐私硬性规则（违反即失败，用户明确要求）**：
+1. agent **只能**通过 web-access 连接专用隔离实例 `web-access-profile/`。该 skill 的浏览器发现列表已被改造为只含此实例——**绝不尝试连接/读取日常 Chrome/Edge 或任何其它浏览器 profile**。
+2. 不使用 `find-url` 检索任何浏览器历史/书签（该命令已限制为专用实例，且日常浏览器数据物理不可达）。
+3. agent **只在自己创建的 tab 中操作**，绝不触碰/阅读用户或其它已打开的标签页；任务结束用 `/close` 关闭自己创建的 tab。
+4. 不读取专用实例目录以外任何浏览器数据文件（`Login Data`、`History`、`Cookies` 等一律不读不解密）。
+5. 若专用实例未运行或连接失败：**不要**改连日常浏览器，明确告知用户"请先运行 scripts/start-web-access-profile.ps1"，然后回退到 `hku-browser` MCP + 手动登录流程。
+
+### 并行子 Agent 抓全文（工具二 · 多篇付费文章时）
+
+需要为**多篇**付费文章抓全文时，用**并行子 Agent** 加速（web-access 支持共享代理 + tab 级隔离，多子 Agent 并行无竞态）：
+
+1. 主 Agent 先整理出每篇候选的**全文 URL**（经 Primo 拿到重写后的 URL）与目标保存文件名 `cache/<pmid>_<source>.txt`。
+2. 用 Task 工具派发**并行子 Agent**（subagent_type=general），每篇（或每 2-3 篇一组）一个子任务。子 Agent prompt 必须包含：
+   - 明确目标：抓取指定 URL 的正文，保存为指定的 `cache/<pmid>_<source>.txt`（给出准确 URL 和文件名，避免歧义）。
+   - **必须写明「必须加载 web-access skill 并遵循指引」**，让子 Agent 自行加载。
+   - 操作要求：只用 web-access CDP 通道连专用隔离实例；**只在自己创建的 tab 操作**；`/new` 打开 URL → `/scroll` 触发懒加载 → `/eval` 提取正文（返回纯字符串）→ 保存到 cache/ → `/close` 关闭自己创建的 tab。
+   - 返回：成功/失败 + 字数 + 文件路径；失败时说明原因（如登录页、paywall、提取为空）。
+3. 主 Agent 等待各子 Agent 结果，汇总成功/失败清单。
+4. 汇总后继续工具二后续：对成功获取全文的文章做 RAG 抽取（snippets.py）→ 写报告。
+5. 若专用实例不可用，退化为串行（hku-browser + 手动登录）。
+
+**站点经验**：每次抓取成功后，把验证过的规律写入 `.opencode/skills/web-access/references/site-patterns/<域名>.md`（如 ScienceDirect 懒加载、EBSCO PDF 流、eproxy 登录跳转等），跨会话复用。
+
+### HKU EZproxy 全文获取（工具二核心路径）
 
 **会话持久化（重要）**：`hku-browser` MCP 使用的 Chrome profile（`.hku-profile`）会持久保存登录会话。用户首次在该浏览器中打开付费文章时完成一次 HKU 登录后，会话即被保存；**之后打开任何付费文章均无需再次登录**。除非遇到登录页/会话过期，不要反复提示用户登录。
 
@@ -214,9 +255,9 @@ Where should the report be saved?
 2. 只把返回的 top-K 相关段落作为该文章的上下文，**不要**把整篇全文塞进上下文。
 3. 将抽取出的段落与对应的 PMID/DOI 绑定，作为回答的事实来源。
 
-### 浏览器辅助（hku-browser MCP）
+### 浏览器辅助（hku-browser MCP，回退通道）
 
-模式二全文抓取完全依赖 `hku-browser` MCP（见上"HKU EZproxy 全文获取"）。要点：
+`hku-browser` MCP 是**回退通道**（优先用上面 web-access 专用隔离实例）。要点：
 - ScienceDirect 等 publisher 正文是懒加载，抓取前必须滚动整个页面。
 - 用 `browser_evaluate` 返回**纯字符串**，通过 `filename` 保存；不要返回对象。
 - 提取时用 Set 去重，跳过短文本，`h2/h3` 写成 `## 标题` 以配合 `snippets.py` 的章节归属。
@@ -229,16 +270,16 @@ Where should the report be saved?
 - 用户若明确要求"包含 germinoma 只是研究的一小部分的论文"，检索方案必须更宽：增加**机理/通路类上位词**（如 BMP、TGF-beta、developmental signalling）+ 组织学类别词（germ cell tumor、dysgerminoma、seminoma）的多角度组合，并在 Step 3 向用户确认覆盖度。
 - 若用户事后指出漏掉的某篇，立即按该文实际标题检索定位、获取全文并补进报告，并在 Screening Notes 里记录"初筛漏检原因 + 补充过程"。
 
-### 模式三：单篇文献精读（Deep Reading）
+### 工具三：单篇文献精读（Deep Reading）
 
-适用：用户明确指定**一篇**文献，要求精读全文、做深度总结、回答具体问题（如"精读 PMID 27583450 这篇文章""精读这篇 PDF，回答：他们的结论是什么？"）。**单篇、精读、逐条答疑**是模式三的标志；跨多篇比较仍走模式一/二。
+适用：用户明确指定**一篇**文献，要求精读全文、做深度总结、回答具体问题（如"精读 PMID 27583450 这篇文章""精读这篇 PDF，回答：他们的结论是什么？"）。**单篇、精读、逐条答疑**是工具三的标志；跨多篇比较仍走工具一/二。
 
 1. **定位文献并获取全文**：
-   - 用户给了 **PMID / DOI / 标题**：运行 `python scripts/mode3_deep_read.py "<标识符>"`。脚本自动识别类型，解析第一作者/杂志/年份，并优先通过 Europe PMC 开放获取拉取全文，输出 `OK: ... saved to cache/<pmid>.txt`。
-   - 用户给了 **本地文件路径**：运行 `python scripts/mode3_deep_read.py --local "<绝对路径>"`。支持 PDF（用 pypdf 提取，若报错先 `pip install pypdf`）与纯文本/`.md`；脚本打印正文开头供识别作者/杂志/年份。
-   - 输出 `PAYWALLED:`：走模式二"HKU EZproxy 全文获取"路径抓正文，保存到 `cache/<pmid>_<source>.txt`。
+   - 用户给了 **PMID / DOI / 标题**：运行 `python scripts/tool3_deep_read.py "<标识符>"`。脚本自动识别类型，解析第一作者/杂志/年份，并优先通过 Europe PMC 开放获取拉取全文，输出 `OK: ... saved to cache/<pmid>.txt`。
+   - 用户给了 **本地文件路径**：运行 `python scripts/tool3_deep_read.py --local "<绝对路径>"`。支持 PDF（用 pypdf 提取，若报错先 `pip install pypdf`）与纯文本/`.md`；脚本打印正文开头供识别作者/杂志/年份。
+   - 输出 `PAYWALLED:`：走工具二"HKU EZproxy 全文获取"路径抓正文，保存到 `cache/<pmid>_<source>.txt`。
    - **先查缓存**：若 `cache/` 已存在对应 `<pmid>.txt`，直接复用，跳过抓取。
-2. **报告文件名（强制）**：`作者 + 杂志名称 + 发表时间`，格式为 `<第一作者姓> et al. - <杂志名> - <年份>.md`（单作者不加 "et al."），例如 `Zhang et al. - PLoS genetics - 2016.md`。`mode3_deep_read.py` 会打印 `REPORT_NAME:` 直接使用；本地文件则从正文头部提取作者/杂志/年份自行构造（缺失时尽力推断，实在无法确定再向用户确认）。
+2. **报告文件名（强制）**：`作者 + 杂志名称 + 发表时间`，格式为 `<第一作者姓> et al. - <杂志名> - <年份>.md`（单作者不加 "et al."），例如 `Zhang et al. - PLoS genetics - 2016.md`。`tool3_deep_read.py` 会打印 `REPORT_NAME:` 直接使用；本地文件则从正文头部提取作者/杂志/年份自行构造（缺失时尽力推断，实在无法确定再向用户确认）。
 3. **回答用户的精读问题**：用户精读要求中提出的每个具体问题，用 `python scripts/snippets.py "<问题>" cache/<file>.txt --top 8` 抽取相关段落作为事实来源，逐条回答。
 4. **生成精读报告**：按下面"文献精读报告结构"写入 `reports/<REPORT_NAME>`。对话中只简短告知保存路径与概要，不重复全文。
 5. **持续提问（Follow-up）**：
@@ -246,9 +287,9 @@ Where should the report be saved?
    - **仅当用户明确要求**（如"加到报告里""补充进报告"）时，将新的 Q&A 追加到报告文件末尾 `## Follow-up Q&A` 小节（按时间顺序追加，编号递增）。
    - 会话中记住当前精读的全文文件路径与报告文件路径；用户切换到其他文章则更新为新的路径。
 
-### 会话状态（模式三必需）
+### 会话状态（工具三必需）
 
-模式三要求跨消息记忆当前精读对象。在对话中维护并明确标注：当前文章标题、全文文本路径（`cache/xxx.txt`）、报告路径（`reports/xxx.md`）。用户新开一篇精读时更新这些状态。
+工具三要求跨消息记忆当前精读对象。在对话中维护并明确标注：当前文章标题、全文文本路径（`cache/xxx.txt`）、报告路径（`reports/xxx.md`）。用户新开一篇精读时更新这些状态。
 
 ## 输出格式
 
@@ -257,7 +298,7 @@ Where should the report be saved?
 ### 保存为 Markdown 文件（必做）
 
 每次文献检索的完整输出**必须**保存为一个 Markdown 文件：
-- 文件名：以**用户本次检索所给的关键词/主题**命名，如 `DMRT1_in_spermatogenesis.md`（空格和下划线替换），时间戳可选追加。**模式三例外**：单篇精读的报告文件名必须是 `<第一作者> et al. - <杂志名> - <年份>.md`（见"文献精读报告结构"）。
+- 文件名：以**用户本次检索所给的关键词/主题**命名，如 `DMRT1_in_spermatogenesis.md`（空格和下划线替换），时间戳可选追加。**工具三例外**：单篇精读的报告文件名必须是 `<第一作者> et al. - <杂志名> - <年份>.md`（见"文献精读报告结构"）。
 - 保存位置：默认在工作区根目录下的 `reports/` 文件夹（不存在则创建）。
 - **用户指定其它保存位置**：当用户要求把报告保存到别处（如"保存到 D:\projects\foo"、"存到我另一个项目里"、"放到 XXX 项目下"），一律保存到 `<目标路径>\paper_reports\`。若 `<目标路径>` 或 `paper_reports` 子目录不存在，先用 `New-Item -ItemType Directory -Path <目标路径>\paper_reports -Force` 创建。文件命名规则不变。
 - 文件内容：包含完整的检索结果报告（即下面"严格按以下结构输出"的完整内容），Markdown 格式。
@@ -304,7 +345,7 @@ When the question asks to list/compare multiple experiments or studies, use a Ma
 
 The "Experimental Method" for each row must come from its **full text**, never inferred from the abstract only.
 
-### 文献精读报告结构（模式三专用）
+### 文献精读报告结构（工具三专用）
 
 文件名为 `<第一作者> et al. - <杂志名> - <年份>.md`，内容按以下结构写入 `reports/`。**引用规则**：文中关键结论必须标注引用 `[[1]](https://doi.org/<doi>)`（n=1 即该文献本身），并可在括号内注明对应原文章节，如 `(Results: "DMRT1 is required for SSC maintenance")`。语言默认英文，用户要求中文时用中文。
 

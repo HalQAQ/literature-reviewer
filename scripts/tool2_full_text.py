@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""mode2_full_text.py - Fetch full text for a PMID or DOI.
+"""tool2_full_text.py - Fetch full text for a PMID or DOI.
 
 Priority:
   1. Open-access full text via Europe PMC (free, no subscription).
@@ -10,8 +10,8 @@ Output: plain-text file saved to <outdir>/<pmid>.txt and prints its path,
 plus a summary of sections. Does NOT download any PDFs.
 
 Usage:
-  python mode2_full_text.py --pmid 24930130 [--outdir cache]
-  python mode2_full_text.py --doi 10.1038/nmeth.2999 [--outdir cache]
+  python tool2_full_text.py --pmid 24930130 [--outdir cache]
+  python tool2_full_text.py --doi 10.1038/nmeth.2999 [--outdir cache]
 """
 
 import argparse
